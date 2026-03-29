@@ -1,8 +1,8 @@
 # MCP Trust Kit
 
-[![Build Status](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/<owner>/<repo>?sort=semver)](https://github.com/<owner>/<repo>/releases)
-[![License](https://img.shields.io/github/license/<owner>/<repo>)](LICENSE)
+[![Build Status](https://github.com/aak204/MCP-Trust-Kit/actions/workflows/example.yml/badge.svg)](https://github.com/aak204/MCP-Trust-Kit/actions/workflows/example.yml)
+[![Release](https://img.shields.io/github/v/release/aak204/MCP-Trust-Kit?sort=semver)](https://github.com/aak204/MCP-Trust-Kit/releases)
+[![License](https://img.shields.io/github/license/aak204/MCP-Trust-Kit)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 
 **Deterministic trust scoring for MCP servers.**
@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run MCP Trust Kit
-        uses: <owner>/mcp-trust-kit@v0.3.0
+        uses: aak204/MCP-Trust-Kit@v0.3.0
         with:
           cmd: python path/to/your/server.py
           min-score: "80"
@@ -90,7 +90,7 @@ jobs:
           sarif_file: mcp-trust-report.sarif
 ```
 
-Replace `<owner>/mcp-trust-kit@v0.3.0` with the real published action reference.
+If the `v0.3.0` tag is not published yet, use a branch name or commit SHA while testing privately.
 
 ## Example Output
 
