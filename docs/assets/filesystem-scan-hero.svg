@@ -1,0 +1,60 @@
+<svg width="1440" height="920" viewBox="0 0 1440 920" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">MCP Trust Kit filesystem scan hero</title>
+  <desc id="desc">Terminal-style screenshot showing a real MCP Trust Kit scan on the official filesystem MCP server with total score 40 out of 100 and dangerous filesystem write findings.</desc>
+  <defs>
+    <linearGradient id="bg" x1="84" y1="36" x2="1360" y2="884" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="160" y1="108" x2="1272" y2="780" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#0B1220"/>
+    </linearGradient>
+    <linearGradient id="header" x1="160" y1="108" x2="1272" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F2937"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="shadow" x="92" y="40" width="1256" height="824" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="920" fill="#020617"/>
+  <circle cx="180" cy="118" r="220" fill="#1D4ED8" opacity="0.18"/>
+  <circle cx="1260" cy="780" r="260" fill="#DC2626" opacity="0.14"/>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="72" width="1200" height="760" rx="24" fill="url(#panel)"/>
+    <rect x="120" y="72" width="1200" height="68" rx="24" fill="url(#header)"/>
+    <path d="M120 116C120 102.745 130.745 92 144 92H1296C1309.25 92 1320 102.745 1320 116V140H120V116Z" fill="url(#header)"/>
+    <circle cx="172" cy="106" r="8" fill="#F87171"/>
+    <circle cx="198" cy="106" r="8" fill="#FBBF24"/>
+    <circle cx="224" cy="106" r="8" fill="#34D399"/>
+    <text x="600" y="112" text-anchor="middle" fill="#CBD5E1" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">MCP Trust Kit real scan: official filesystem server</text>
+
+    <text x="164" y="186" fill="#60A5FA" font-size="24" font-family="SFMono-Regular,Consolas,Menlo,monospace">$</text>
+    <text x="190" y="186" fill="#E2E8F0" font-size="24" font-family="SFMono-Regular,Consolas,Menlo,monospace">mcp-trust scan --cmd npx -y @modelcontextprotocol/server-filesystem@2026.1.14 .tmp-mcp-fs</text>
+
+    <text x="164" y="238" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Server: secure-filesystem-server</text>
+    <text x="164" y="274" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Version: 0.2.0</text>
+    <text x="164" y="310" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Protocol: 2025-11-25</text>
+    <text x="164" y="346" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Tools: 14</text>
+    <text x="164" y="382" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Findings: 3</text>
+
+    <text x="164" y="440" fill="#E2E8F0" font-size="30" font-family="SFMono-Regular,Consolas,Menlo,monospace">Total Score: <tspan fill="#F87171">40/100</tspan></text>
+    <text x="164" y="478" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Why This Score: Score is driven mainly by detected file system issues.</text>
+    <text x="164" y="514" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">High-Risk Capabilities: <tspan fill="#FDBA74">file system</tspan></text>
+
+    <rect x="156" y="548" width="1128" height="1" fill="#1E293B"/>
+    <text x="164" y="586" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Top Findings:</text>
+
+    <text x="164" y="632" fill="#F87171" font-size="21" font-family="SFMono-Regular,Consolas,Menlo,monospace">- ERROR dangerous_fs_write_tool [create_directory]</text>
+    <text x="216" y="662" fill="#FCA5A5" font-size="20" font-family="SFMono-Regular,Consolas,Menlo,monospace">Tool 'create_directory' appears to provide filesystem write access.</text>
+
+    <text x="164" y="708" fill="#F87171" font-size="21" font-family="SFMono-Regular,Consolas,Menlo,monospace">- ERROR dangerous_fs_write_tool [edit_file]</text>
+    <text x="216" y="738" fill="#FCA5A5" font-size="20" font-family="SFMono-Regular,Consolas,Menlo,monospace">Tool 'edit_file' appears to provide filesystem write access.</text>
+
+    <text x="164" y="784" fill="#F87171" font-size="21" font-family="SFMono-Regular,Consolas,Menlo,monospace">- ERROR dangerous_fs_write_tool [write_file]</text>
+    <text x="216" y="814" fill="#FCA5A5" font-size="20" font-family="SFMono-Regular,Consolas,Menlo,monospace">Tool 'write_file' appears to provide filesystem write access.</text>
+  </g>
+</svg>

@@ -5,6 +5,8 @@
 [![License](https://img.shields.io/github/license/aak204/MCP-Trust-Kit)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 
+![MCP Trust Kit terminal scan showing Total Score 40/100 and dangerous filesystem write findings](docs/assets/filesystem-scan-hero.svg)
+
 **Deterministic surface-risk scoring for MCP servers.**
 
 `MCP Trust Kit` scans a local MCP server over `stdio`, discovers its tools, runs deterministic
@@ -266,6 +268,7 @@ More detail:
 - [examples/fake_stdio_server.py](examples/fake_stdio_server.py)
 - [docs/validated-servers.md](docs/validated-servers.md)
 - [docs/architecture.md](docs/architecture.md)
+- [docs/assets/filesystem-scan-hero.svg](docs/assets/filesystem-scan-hero.svg)
 - [.github/workflows/example.yml](.github/workflows/example.yml)
 
 ## Roadmap
