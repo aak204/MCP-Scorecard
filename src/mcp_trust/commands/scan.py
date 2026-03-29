@@ -48,15 +48,16 @@ def add_scan_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentPars
     """Register the ``scan`` subcommand parser."""
     scan_parser = subparsers.add_parser(
         "scan",
-        help="Scan a local stdio MCP server and evaluate deterministic trust rules.",
+        help="Scan a local stdio MCP server and compute a deterministic surface-risk score.",
         description=(
             "Launch a local MCP server over stdio, discover its tools, run deterministic "
-            "trust rules, print a terminal summary, and optionally write JSON or SARIF reports."
+            "hygiene and capability rules, print a terminal summary, and optionally write "
+            "JSON or SARIF reports."
         ),
         epilog=(
             "Example:\n"
-            "  mcp-trust scan --min-score 80 --json-out report.json "
-            "--cmd python examples\\insecure-server\\server.py"
+            "  mcp-trust scan --min-score 80 --json-out report.json \\\n"
+            "    --sarif report.sarif --cmd python examples/insecure-server/server.py"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -65,7 +66,8 @@ def add_scan_parser(subparsers: argparse._SubParsersAction[argparse.ArgumentPars
         nargs=argparse.REMAINDER,
         help=(
             "Server command to run over stdio. Put this flag last. "
-            "Example: --cmd python examples\\insecure-server\\server.py"
+            "The command is executed directly without a shell. "
+            "Example: --cmd python examples/insecure-server/server.py"
         ),
     )
     scan_parser.add_argument(
@@ -122,14 +124,14 @@ def _normalize_server_command(parts: Sequence[str] | None) -> tuple[str, ...]:
     if parts is None:
         raise ValueError(
             "Missing --cmd. Pass a local stdio server command, for example: "
-            "mcp-trust scan --cmd python examples\\insecure-server\\server.py"
+            "mcp-trust scan --cmd python examples/insecure-server/server.py"
         )
 
     normalized = tuple(part for part in parts if part != "--")
     if not normalized:
         raise ValueError(
             "Empty --cmd value. Pass a local stdio server command after --cmd, "
-            "for example: mcp-trust scan --cmd python examples\\insecure-server\\server.py"
+            "for example: mcp-trust scan --cmd python examples/insecure-server/server.py"
         )
     return normalized
 

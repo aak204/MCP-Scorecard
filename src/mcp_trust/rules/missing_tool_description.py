@@ -9,6 +9,7 @@ from mcp_trust.models import (
     FindingCategory,
     FindingLevel,
     NormalizedServer,
+    RiskCategory,
     ScoreCategory,
 )
 from mcp_trust.rules.base import Rule
@@ -23,7 +24,8 @@ class MissingToolDescriptionRule(Rule):
     summary: str = "Each tool should include a non-empty description."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.TOOL_DESCRIPTION
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
+    score_category: ScoreCategory = ScoreCategory.SPEC
     tags: tuple[str, ...] = ("tools", "description")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project uses Semantic Versioning.
 
+## [0.4.0] - 2026-03-29
+
+First practically useful public release.
+
+### Added
+
+- expanded deterministic ruleset for schema hygiene and risky exposed capabilities
+- capability-aware risk categories in findings and report summaries
+- terminal summary sections for score meaning, why-score explanation, high-risk capabilities, and review-first tools
+- repo CI workflow at `.github/workflows/ci.yml`
+
+### Changed
+
+- repositioned the score as deterministic surface risk rather than abstract trust
+- refined `weak_input_schema` to avoid penalizing empty object schemas for no-arg tools by default
+- Bash-first README and validation docs, with Windows examples moved behind details or separate notes
+- real-world validation docs refreshed against public MCP servers
+
+### Fixed
+
+- filesystem delete heuristic no longer false-positives on `directory_tree` and `get_file_info`
+- public example and sample artifacts regenerated from current scanner behavior
+
 ## [0.3.0] - 2026-03-29
 
 Initial public release.

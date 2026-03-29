@@ -27,10 +27,12 @@ def test_readme_documents_github_actions_quickstart() -> None:
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
 
     assert "## GitHub Actions Quickstart" in readme_text
-    assert "uses: aak204/MCP-Trust-Kit@v0.3.0" in readme_text
+    assert "uses: aak204/MCP-Trust-Kit@v0.4.0" in readme_text
     assert "cmd: python path/to/your/server.py" in readme_text
     assert "github/codeql-action/upload-sarif@v3" in readme_text
     assert "mcp-trust-report.sarif" in readme_text
+    assert "source .venv/bin/activate" in readme_text
+    assert "<details>" in readme_text
 
 
 def test_example_workflow_shows_upload_sarif_even_on_failure() -> None:

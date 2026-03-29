@@ -10,6 +10,7 @@ from mcp_trust.models import (
     FindingCategory,
     FindingLevel,
     NormalizedServer,
+    RiskCategory,
     ScoreCategory,
 )
 from mcp_trust.rules.base import Rule
@@ -42,7 +43,8 @@ class VagueToolDescriptionRule(Rule):
     summary: str = "Tool descriptions should clearly explain what the tool does."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.TOOL_DESCRIPTION
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
+    score_category: ScoreCategory = ScoreCategory.SPEC
     tags: tuple[str, ...] = ("tools", "description")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

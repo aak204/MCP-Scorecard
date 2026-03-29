@@ -27,3 +27,14 @@ def test_example_workflow_matches_readme_release_shape() -> None:
     assert "workflow_dispatch:" in workflow_text
     assert "uses: ./" in workflow_text
     assert 'min-score: "80"' in workflow_text
+
+
+def test_ci_workflow_runs_release_validation_stack() -> None:
+    workflow_text = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "name: CI" in workflow_text
+    assert "python -m pytest" in workflow_text
+    assert "python -m ruff check ." in workflow_text
+    assert "python -m mypy" in workflow_text

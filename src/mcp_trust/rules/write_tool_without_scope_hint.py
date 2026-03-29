@@ -1,4 +1,4 @@
-"""Rule for filesystem write style tools."""
+"""Rule for write-capable tools that lack any scope hint."""
 
 from __future__ import annotations
 
@@ -15,46 +15,43 @@ from mcp_trust.models import (
 )
 from mcp_trust.rules.base import Rule
 from mcp_trust.rules.tool_helpers import (
-    CONTENT_KEYS,
     PATH_KEYS,
+    has_scope_hint,
     matching_keys,
     normalize_text,
     schema_property_names,
 )
 
 _WRITE_MARKERS = ("write", "save", "append", "create", "update", "edit")
+_DELETE_MARKERS = ("delete", "remove", "unlink", "erase", "truncate")
 _FILE_MARKERS = ("file", "filesystem", "disk", "path", "directory", "folder")
 
 
 @dataclass(slots=True, frozen=True)
-class DangerousFsWriteToolRule(Rule):
-    """Flag tools that appear to modify files on disk."""
+class WriteToolWithoutScopeHintRule(Rule):
+    """Flag side-effecting filesystem tools that do not mention scope constraints."""
 
-    rule_id: str = "dangerous_fs_write_tool"
-    title: str = "Dangerous filesystem write tool"
-    summary: str = "Tools that write files on disk are high risk."
-    severity: FindingLevel = FindingLevel.ERROR
+    rule_id: str = "write_tool_without_scope_hint"
+    title: str = "Write tool without scope hint"
+    summary: str = "Filesystem mutation tools should document scope constraints clearly."
+    severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.CAPABILITY
-    risk_category: RiskCategory = RiskCategory.FILE_SYSTEM
+    risk_category: RiskCategory = RiskCategory.EXTERNAL_SIDE_EFFECTS
     score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
-    tags: tuple[str, ...] = ("capability", "filesystem")
+    tags: tuple[str, ...] = ("capability", "filesystem", "scope")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:
-        """Return findings for tools that match the fs write heuristic."""
+        """Return findings for write-capable tools with no scope hint."""
         findings: list[Finding] = []
 
         for tool in server.tools:
-            evidence = self._collect_evidence(
-                tool.name,
-                tool.description,
-                tool.input_schema,
-            )
+            evidence = self._collect_evidence(tool.name, tool.description, tool.input_schema)
             if not evidence:
                 continue
 
             findings.append(
                 self.make_finding(
-                    f"Tool {tool.name!r} appears to provide filesystem write access.",
+                    f"Tool {tool.name!r} modifies the filesystem without any visible scope hint.",
                     tool_name=tool.name,
                     evidence=evidence,
                 )
@@ -68,34 +65,30 @@ class DangerousFsWriteToolRule(Rule):
         description: str | None,
         input_schema: dict[str, JSONValue],
     ) -> tuple[str, ...]:
-        """Return stable evidence for tools that look like file writers."""
+        """Return stable evidence for unscoped filesystem mutation tools."""
         normalized_name = normalize_text(name)
         normalized_description = normalize_text(description)
         property_names = schema_property_names(input_schema)
 
-        matched_write_markers = tuple(
-            marker for marker in _WRITE_MARKERS if marker in normalized_name
+        has_write_marker = any(marker in normalized_name for marker in _WRITE_MARKERS)
+        has_delete_marker = any(
+            marker in normalized_name or marker in normalized_description
+            for marker in _DELETE_MARKERS
         )
-        matched_file_markers = tuple(
-            marker
+        has_file_marker = any(
+            marker in normalized_name or marker in normalized_description
             for marker in _FILE_MARKERS
-            if marker in normalized_name or marker in normalized_description
         )
         matched_path_keys = matching_keys(property_names, PATH_KEYS)
-        matched_content_keys = matching_keys(property_names, CONTENT_KEYS)
 
-        if not matched_write_markers:
+        if not (has_write_marker or has_delete_marker):
             return ()
-        if not matched_file_markers:
+        if not has_file_marker or not matched_path_keys:
             return ()
-        if not matched_path_keys:
+        if has_scope_hint(description=description, input_schema=input_schema):
             return ()
 
-        evidence = [
-            f"write_markers={list(matched_write_markers)!r}",
-            f"file_markers={list(matched_file_markers)!r}",
+        return (
             f"path_keys={list(matched_path_keys)!r}",
-        ]
-        if matched_content_keys:
-            evidence.append(f"content_keys={list(matched_content_keys)!r}")
-        return tuple(evidence)
+            "scope_hint=<missing>",
+        )

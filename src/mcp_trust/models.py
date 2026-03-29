@@ -47,6 +47,17 @@ class FindingCategory(StrEnum):
     CAPABILITY = "capability"
 
 
+class RiskCategory(StrEnum):
+    """Capability-aware risk categories used in summaries and findings."""
+
+    FILE_SYSTEM = "file_system"
+    COMMAND_EXECUTION = "command_execution"
+    NETWORK = "network"
+    EXTERNAL_SIDE_EFFECTS = "external_side_effects"
+    SCHEMA_HYGIENE = "schema_hygiene"
+    METADATA_HYGIENE = "metadata_hygiene"
+
+
 class ScoreCategory(StrEnum):
     """Top-level scoring buckets exposed to users."""
 
@@ -112,6 +123,7 @@ class Finding:
     message: str
     title: str | None = None
     category: FindingCategory | None = None
+    risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
     score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
     evidence: tuple[str, ...] = field(default_factory=tuple)
     penalty: int = 0
@@ -160,6 +172,7 @@ class RuleDescriptor:
     summary: str
     severity: FindingLevel
     category: FindingCategory
+    risk_category: RiskCategory
     score_category: ScoreCategory
     score_impact: int
     tags: tuple[str, ...] = field(default_factory=tuple)
@@ -342,7 +355,7 @@ class Report:
     score: ScoreBreakdown
     rule_descriptors: dict[str, RuleDescriptor] = field(default_factory=dict)
     generated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
-    schema_version: str = "0.3"
+    schema_version: str = "0.4"
     toolkit_version: str = __version__
     metadata: dict[str, JSONValue] = field(default_factory=dict)
 

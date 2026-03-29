@@ -1,5 +1,5 @@
 name: MCP Trust Kit
-description: Scan a local stdio MCP server, calculate a trust score, and emit JSON and SARIF reports.
+description: Scan a local stdio MCP server, calculate a deterministic surface-risk score, and emit JSON and SARIF reports.
 
 inputs:
   cmd:

@@ -28,6 +28,7 @@ def test_scan_cli_discovers_tools_from_fake_stdio_server(
     assert "Protocol: 2025-11-25" in captured.out
     assert "Target: stdio:" in captured.out
     assert "Findings: 0" in captured.out
+    assert "Score Meaning:" in captured.out
     assert "Top Findings:" in captured.out
     assert "- none" in captured.out
     assert "Total Score: 100/100" in captured.out
@@ -50,7 +51,8 @@ def test_scan_cli_returns_non_zero_when_score_is_below_threshold(
     captured = capsys.readouterr()
 
     assert exit_code == EXIT_CODE_SCORE_BELOW_THRESHOLD
-    assert "Total Score: 40/100" in captured.out
+    assert "Total Score: 10/100" in captured.out
+    assert "High-Risk Capabilities:" in captured.out
     assert "Score gate failed" in captured.err
     assert "--min-score 80" in captured.err
 

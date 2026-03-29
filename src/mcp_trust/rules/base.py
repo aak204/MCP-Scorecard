@@ -12,6 +12,7 @@ from mcp_trust.models import (
     FindingLevel,
     JSONValue,
     NormalizedServer,
+    RiskCategory,
     RuleDescriptor,
     ScoreCategory,
 )
@@ -32,6 +33,7 @@ class Rule(ABC):
     summary: str
     severity: FindingLevel
     category: FindingCategory
+    risk_category: RiskCategory
     score_category: ScoreCategory
     tags: tuple[str, ...] = field(default_factory=tuple)
 
@@ -58,6 +60,7 @@ class Rule(ABC):
             summary=self.summary,
             severity=self.severity,
             category=self.category,
+            risk_category=self.risk_category,
             score_category=self.score_category,
             score_impact=self.score_impact,
             tags=self.tags,
@@ -81,6 +84,7 @@ class Rule(ABC):
             level=self.severity,
             title=self.title,
             category=self.category,
+            risk_category=self.risk_category,
             score_category=self.score_category,
             message=message,
             evidence=tuple(evidence),

@@ -10,6 +10,7 @@ from mcp_trust.models import (
     FindingCategory,
     FindingLevel,
     NormalizedServer,
+    RiskCategory,
     ScoreCategory,
 )
 from mcp_trust.rules.base import Rule
@@ -24,7 +25,8 @@ class DuplicateToolNamesRule(Rule):
     summary: str = "Tool names should be unique within one MCP server."
     severity: FindingLevel = FindingLevel.ERROR
     category: FindingCategory = FindingCategory.TOOL_IDENTITY
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
+    score_category: ScoreCategory = ScoreCategory.SPEC
     tags: tuple[str, ...] = ("tools", "identity")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

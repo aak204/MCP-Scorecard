@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.3",
-  "toolkit_version": "0.3.0",
-  "generated_at": "2026-03-29T12:42:41.732915+00:00",
+  "schema_version": "0.4",
+  "toolkit_version": "0.4.0",
+  "generated_at": "2026-03-29T13:48:58.855632+00:00",
   "server": {
     "target": "stdio:[\".\\\\.venv\\\\Scripts\\\\python\",\"examples\\\\insecure-server\\\\server.py\"]",
     "name": "Insecure Demo Server",
@@ -98,11 +98,27 @@
   ],
   "findings": [
     {
+      "rule_id": "overly_generic_tool_name",
+      "title": "Overly generic tool name",
+      "severity": "warning",
+      "category": "tool-identity",
+      "risk_category": "metadata_hygiene",
+      "score_category": "spec",
+      "tool_name": "do_it",
+      "message": "Tool 'do_it' uses an overly generic name that hides its behavior.",
+      "evidence": [
+        "tool_name='do_it'"
+      ],
+      "score_impact": 10,
+      "metadata": {}
+    },
+    {
       "rule_id": "vague_tool_description",
       "title": "Vague tool description",
       "severity": "warning",
       "category": "tool-description",
-      "score_category": "tool_surface",
+      "risk_category": "metadata_hygiene",
+      "score_category": "spec",
       "tool_name": "do_it",
       "message": "Tool 'do_it' uses a vague description that does not explain its behavior clearly.",
       "evidence": [
@@ -114,16 +130,32 @@
       "metadata": {}
     },
     {
+      "rule_id": "schema_allows_arbitrary_properties",
+      "title": "Schema allows arbitrary properties",
+      "severity": "warning",
+      "category": "input-schema",
+      "risk_category": "schema_hygiene",
+      "score_category": "spec",
+      "tool_name": "debug_payload",
+      "message": "Tool 'debug_payload' allows arbitrary additional input properties.",
+      "evidence": [
+        "additionalProperties=True",
+        "property_count=0"
+      ],
+      "score_impact": 10,
+      "metadata": {}
+    },
+    {
       "rule_id": "weak_input_schema",
       "title": "Weak input schema",
       "severity": "warning",
       "category": "input-schema",
-      "score_category": "tool_surface",
+      "risk_category": "schema_hygiene",
+      "score_category": "spec",
       "tool_name": "debug_payload",
-      "message": "Tool 'debug_payload' exposes a weak input schema that accepts poorly constrained input.",
+      "message": "Tool 'debug_payload' exposes a weak input schema that leaves free-form input underconstrained.",
       "evidence": [
-        "additionalProperties=True",
-        "properties=<missing-or-empty>"
+        "matched_heuristic=inputful_tool_with_empty_object_schema"
       ],
       "score_impact": 10,
       "metadata": {}
@@ -133,6 +165,7 @@
       "title": "Dangerous execution tool",
       "severity": "error",
       "category": "capability",
+      "risk_category": "command_execution",
       "score_category": "tool_surface",
       "tool_name": "exec_command",
       "message": "Tool 'exec_command' appears to expose host command execution.",
@@ -149,6 +182,7 @@
       "title": "Dangerous filesystem write tool",
       "severity": "error",
       "category": "capability",
+      "risk_category": "file_system",
       "score_category": "tool_surface",
       "tool_name": "write_file",
       "message": "Tool 'write_file' appears to provide filesystem write access.",
@@ -160,19 +194,40 @@
       ],
       "score_impact": 20,
       "metadata": {}
+    },
+    {
+      "rule_id": "write_tool_without_scope_hint",
+      "title": "Write tool without scope hint",
+      "severity": "warning",
+      "category": "capability",
+      "risk_category": "external_side_effects",
+      "score_category": "tool_surface",
+      "tool_name": "write_file",
+      "message": "Tool 'write_file' modifies the filesystem without any visible scope hint.",
+      "evidence": [
+        "path_keys=['path']",
+        "scope_hint=<missing>"
+      ],
+      "score_impact": 10,
+      "metadata": {}
     }
   ],
   "score": {
-    "total_score": 40,
+    "total_score": 10,
     "max_score": 100,
-    "penalty_points": 60,
+    "penalty_points": 90,
     "category_breakdown": {
       "spec": {
-        "score": 100,
+        "score": 60,
         "max_score": 100,
-        "penalty_points": 0,
-        "finding_count": 0,
-        "rule_penalties": {}
+        "penalty_points": 40,
+        "finding_count": 4,
+        "rule_penalties": {
+          "overly_generic_tool_name": 10,
+          "vague_tool_description": 10,
+          "schema_allows_arbitrary_properties": 10,
+          "weak_input_schema": 10
+        }
       },
       "auth": {
         "score": 100,
@@ -189,54 +244,41 @@
         "rule_penalties": {}
       },
       "tool_surface": {
-        "score": 40,
+        "score": 50,
         "max_score": 100,
-        "penalty_points": 60,
-        "finding_count": 4,
+        "penalty_points": 50,
+        "finding_count": 3,
         "rule_penalties": {
-          "vague_tool_description": 10,
-          "weak_input_schema": 10,
           "dangerous_exec_tool": 20,
-          "dangerous_fs_write_tool": 20
+          "dangerous_fs_write_tool": 20,
+          "write_tool_without_scope_hint": 10
         }
       }
     },
     "rule_penalties": {
+      "overly_generic_tool_name": 10,
       "vague_tool_description": 10,
+      "schema_allows_arbitrary_properties": 10,
       "weak_input_schema": 10,
       "dangerous_exec_tool": 20,
-      "dangerous_fs_write_tool": 20
+      "dangerous_fs_write_tool": 20,
+      "write_tool_without_scope_hint": 10
     }
   },
   "summary": {
     "tool_count": 4,
-    "finding_count": 4,
+    "finding_count": 7,
     "severity_counts": {
       "info": 0,
-      "warning": 2,
+      "warning": 5,
       "error": 2
     },
     "top_findings": [
       {
-        "rule_id": "vague_tool_description",
-        "title": "Vague tool description",
-        "severity": "warning",
-        "tool_name": "do_it",
-        "message": "Tool 'do_it' uses a vague description that does not explain its behavior clearly.",
-        "score_impact": 10
-      },
-      {
-        "rule_id": "weak_input_schema",
-        "title": "Weak input schema",
-        "severity": "warning",
-        "tool_name": "debug_payload",
-        "message": "Tool 'debug_payload' exposes a weak input schema that accepts poorly constrained input.",
-        "score_impact": 10
-      },
-      {
         "rule_id": "dangerous_exec_tool",
         "title": "Dangerous execution tool",
         "severity": "error",
+        "risk_category": "command_execution",
         "tool_name": "exec_command",
         "message": "Tool 'exec_command' appears to expose host command execution.",
         "score_impact": 20
@@ -245,15 +287,102 @@
         "rule_id": "dangerous_fs_write_tool",
         "title": "Dangerous filesystem write tool",
         "severity": "error",
+        "risk_category": "file_system",
         "tool_name": "write_file",
         "message": "Tool 'write_file' appears to provide filesystem write access.",
         "score_impact": 20
+      },
+      {
+        "rule_id": "schema_allows_arbitrary_properties",
+        "title": "Schema allows arbitrary properties",
+        "severity": "warning",
+        "risk_category": "schema_hygiene",
+        "tool_name": "debug_payload",
+        "message": "Tool 'debug_payload' allows arbitrary additional input properties.",
+        "score_impact": 10
+      },
+      {
+        "rule_id": "weak_input_schema",
+        "title": "Weak input schema",
+        "severity": "warning",
+        "risk_category": "schema_hygiene",
+        "tool_name": "debug_payload",
+        "message": "Tool 'debug_payload' exposes a weak input schema that leaves free-form input underconstrained.",
+        "score_impact": 10
+      },
+      {
+        "rule_id": "overly_generic_tool_name",
+        "title": "Overly generic tool name",
+        "severity": "warning",
+        "risk_category": "metadata_hygiene",
+        "tool_name": "do_it",
+        "message": "Tool 'do_it' uses an overly generic name that hides its behavior.",
+        "score_impact": 10
       }
+    ],
+    "risk_summary": [
+      {
+        "risk_category": "metadata_hygiene",
+        "label": "metadata hygiene",
+        "finding_count": 2,
+        "penalty_points": 20,
+        "tool_names": [
+          "do_it"
+        ]
+      },
+      {
+        "risk_category": "schema_hygiene",
+        "label": "schema hygiene",
+        "finding_count": 2,
+        "penalty_points": 20,
+        "tool_names": [
+          "debug_payload"
+        ]
+      },
+      {
+        "risk_category": "command_execution",
+        "label": "command execution",
+        "finding_count": 1,
+        "penalty_points": 20,
+        "tool_names": [
+          "exec_command"
+        ]
+      },
+      {
+        "risk_category": "file_system",
+        "label": "file system",
+        "finding_count": 1,
+        "penalty_points": 20,
+        "tool_names": [
+          "write_file"
+        ]
+      },
+      {
+        "risk_category": "external_side_effects",
+        "label": "external side effects",
+        "finding_count": 1,
+        "penalty_points": 10,
+        "tool_names": [
+          "write_file"
+        ]
+      }
+    ],
+    "why_score": "Score is driven mainly by detected command execution and file system issues.",
+    "review_first_tools": [
+      "write_file",
+      "exec_command",
+      "debug_payload",
+      "do_it"
+    ],
+    "score_meaning": "Deterministic surface-risk score based on protocol/tool hygiene and risky exposed capabilities.",
+    "score_limits": [
+      "Low score means higher exposed surface risk, not malicious intent.",
+      "High score means fewer deterministic findings, not a guarantee of safety."
     ]
   },
-  "total_score": 40,
+  "total_score": 10,
   "max_score": 100,
-  "penalty_points": 60,
+  "penalty_points": 90,
   "target": "stdio:[\".\\\\.venv\\\\Scripts\\\\python\",\"examples\\\\insecure-server\\\\server.py\"]",
   "metadata": {}
 }

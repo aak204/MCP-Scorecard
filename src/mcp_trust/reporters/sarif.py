@@ -85,6 +85,7 @@ def _serialize_rule_descriptor(rule_descriptor: RuleDescriptor) -> dict[str, obj
             "tags": list(_build_rule_tags(rule_descriptor)),
             "precision": "medium",
             "problem.severity": _map_problem_severity(rule_descriptor.severity),
+            "risk_category": rule_descriptor.risk_category.value,
             "score_category": rule_descriptor.score_category.value,
             "score_impact": rule_descriptor.score_impact,
         },
@@ -107,6 +108,7 @@ def _serialize_result(
             "primaryLocationLineHash": _fingerprint(finding, artifact_uri),
         },
         "properties": {
+            "risk_category": finding.risk_category.value,
             "score_category": finding.score_category.value,
             "score_impact": finding.score_impact,
             "tool_name": finding.tool_name,
@@ -155,6 +157,7 @@ def _build_rule_tags(rule_descriptor: RuleDescriptor) -> tuple[str, ...]:
     """Return stable SARIF tags for a rule."""
     tags = list(rule_descriptor.tags)
     tags.append(rule_descriptor.category.value)
+    tags.append(rule_descriptor.risk_category.value)
     tags.append(rule_descriptor.score_category.value)
     return tuple(dict.fromkeys(tags))
 

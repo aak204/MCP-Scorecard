@@ -10,9 +10,17 @@ from mcp_trust.models import (
     FindingLevel,
     JSONValue,
     NormalizedServer,
+    RiskCategory,
     ScoreCategory,
 )
 from mcp_trust.rules.base import Rule
+from mcp_trust.rules.tool_helpers import (
+    GENERIC_INPUT_KEYS,
+    looks_like_inputful_tool,
+    matching_keys,
+    schema_properties,
+    schema_type,
+)
 
 
 @dataclass(slots=True, frozen=True)
@@ -21,10 +29,11 @@ class WeakInputSchemaRule(Rule):
 
     rule_id: str = "weak_input_schema"
     title: str = "Weak input schema"
-    summary: str = "Tool input schemas should constrain accepted input clearly."
+    summary: str = "Tool input schemas should constrain free-form payloads clearly."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.INPUT_SCHEMA
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    risk_category: RiskCategory = RiskCategory.SCHEMA_HYGIENE
+    score_category: ScoreCategory = ScoreCategory.SPEC
     tags: tuple[str, ...] = ("schema", "validation")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:
@@ -32,15 +41,19 @@ class WeakInputSchemaRule(Rule):
         findings: list[Finding] = []
 
         for tool in server.tools:
-            reasons = self._collect_reasons(tool.input_schema)
+            reasons = self._collect_reasons(
+                tool.name,
+                tool.description,
+                tool.input_schema,
+            )
             if not reasons:
                 continue
 
             findings.append(
                 self.make_finding(
                     (
-                        f"Tool {tool.name!r} exposes a weak input schema that accepts "
-                        "poorly constrained input."
+                        f"Tool {tool.name!r} exposes a weak input schema that leaves "
+                        "free-form input underconstrained."
                     ),
                     tool_name=tool.name,
                     evidence=tuple(reasons),
@@ -49,23 +62,48 @@ class WeakInputSchemaRule(Rule):
 
         return tuple(findings)
 
-    def _collect_reasons(self, input_schema: dict[str, JSONValue]) -> tuple[str, ...]:
-        """Return stable evidence lines when the schema is too permissive."""
+    def _collect_reasons(
+        self,
+        name: str,
+        description: str | None,
+        input_schema: dict[str, JSONValue],
+    ) -> tuple[str, ...]:
+        """Return stable evidence lines for underconstrained payload schemas."""
         reasons: list[str] = []
 
-        schema_type = input_schema.get("type")
-        if schema_type != "object":
-            reasons.append(f"schema_type={schema_type!r}")
+        if schema_type(input_schema) != "object":
+            return ()
+
+        properties = schema_properties(input_schema)
+        if not properties:
+            if looks_like_inputful_tool(name, description):
+                reasons.append("matched_heuristic=inputful_tool_with_empty_object_schema")
             return tuple(reasons)
 
-        properties = input_schema.get("properties")
-        additional_properties = input_schema.get("additionalProperties")
+        property_names = tuple(properties)
+        generic_input_keys = matching_keys(property_names, GENERIC_INPUT_KEYS)
+        weak_generic_keys: list[str] = []
 
-        if additional_properties is True:
-            reasons.append("additionalProperties=True")
+        for key in generic_input_keys:
+            property_schema = properties.get(key)
+            if not isinstance(property_schema, dict):
+                weak_generic_keys.append(key)
+                continue
 
-        if not isinstance(properties, dict) or not properties:
-            if additional_properties is not False:
-                reasons.append("properties=<missing-or-empty>")
+            property_type = property_schema.get("type")
+            property_properties = property_schema.get("properties")
+            property_additional_properties = property_schema.get("additionalProperties")
+            if not isinstance(property_type, str):
+                weak_generic_keys.append(key)
+                continue
+            if (
+                property_type == "object"
+                and not isinstance(property_properties, dict)
+                and property_additional_properties is not False
+            ):
+                weak_generic_keys.append(key)
+
+        if weak_generic_keys:
+            reasons.append(f"generic_input_keys={weak_generic_keys!r}")
 
         return tuple(reasons)

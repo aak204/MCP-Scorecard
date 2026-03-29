@@ -6,7 +6,7 @@
       "tool": {
         "driver": {
           "name": "MCP Trust Kit",
-          "semanticVersion": "0.3.0",
+          "semanticVersion": "0.4.0",
           "rules": [
             {
               "id": "duplicate_tool_names",
@@ -28,11 +28,13 @@
                   "tools",
                   "identity",
                   "tool-identity",
-                  "tool_surface"
+                  "metadata_hygiene",
+                  "spec"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
-                "score_category": "tool_surface",
+                "risk_category": "metadata_hygiene",
+                "score_category": "spec",
                 "score_impact": 20
               }
             },
@@ -56,11 +58,43 @@
                   "tools",
                   "description",
                   "tool-description",
-                  "tool_surface"
+                  "metadata_hygiene",
+                  "spec"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
-                "score_category": "tool_surface",
+                "risk_category": "metadata_hygiene",
+                "score_category": "spec",
+                "score_impact": 10
+              }
+            },
+            {
+              "id": "overly_generic_tool_name",
+              "name": "Overly generic tool name",
+              "shortDescription": {
+                "text": "Overly generic tool name"
+              },
+              "fullDescription": {
+                "text": "Tool names should communicate behavior clearly."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Tool names should communicate behavior clearly. Severity: warning. Score impact: 10."
+              },
+              "properties": {
+                "tags": [
+                  "tools",
+                  "identity",
+                  "tool-identity",
+                  "metadata_hygiene",
+                  "spec"
+                ],
+                "precision": "medium",
+                "problem.severity": "warning",
+                "risk_category": "metadata_hygiene",
+                "score_category": "spec",
                 "score_impact": 10
               }
             },
@@ -84,11 +118,73 @@
                   "tools",
                   "description",
                   "tool-description",
-                  "tool_surface"
+                  "metadata_hygiene",
+                  "spec"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
-                "score_category": "tool_surface",
+                "risk_category": "metadata_hygiene",
+                "score_category": "spec",
+                "score_impact": 10
+              }
+            },
+            {
+              "id": "missing_schema_type",
+              "name": "Missing schema type",
+              "shortDescription": {
+                "text": "Missing schema type"
+              },
+              "fullDescription": {
+                "text": "Tool input schemas should declare a top-level type."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Tool input schemas should declare a top-level type. Severity: warning. Score impact: 10."
+              },
+              "properties": {
+                "tags": [
+                  "schema",
+                  "validation",
+                  "input-schema",
+                  "schema_hygiene",
+                  "spec"
+                ],
+                "precision": "medium",
+                "problem.severity": "warning",
+                "risk_category": "schema_hygiene",
+                "score_category": "spec",
+                "score_impact": 10
+              }
+            },
+            {
+              "id": "schema_allows_arbitrary_properties",
+              "name": "Schema allows arbitrary properties",
+              "shortDescription": {
+                "text": "Schema allows arbitrary properties"
+              },
+              "fullDescription": {
+                "text": "Tool input schemas should not allow arbitrary top-level properties."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Tool input schemas should not allow arbitrary top-level properties. Severity: warning. Score impact: 10."
+              },
+              "properties": {
+                "tags": [
+                  "schema",
+                  "validation",
+                  "input-schema",
+                  "schema_hygiene",
+                  "spec"
+                ],
+                "precision": "medium",
+                "problem.severity": "warning",
+                "risk_category": "schema_hygiene",
+                "score_category": "spec",
                 "score_impact": 10
               }
             },
@@ -99,24 +195,56 @@
                 "text": "Weak input schema"
               },
               "fullDescription": {
-                "text": "Tool input schemas should constrain accepted input clearly."
+                "text": "Tool input schemas should constrain free-form payloads clearly."
               },
               "defaultConfiguration": {
                 "level": "warning"
               },
               "help": {
-                "text": "Tool input schemas should constrain accepted input clearly. Severity: warning. Score impact: 10."
+                "text": "Tool input schemas should constrain free-form payloads clearly. Severity: warning. Score impact: 10."
               },
               "properties": {
                 "tags": [
                   "schema",
                   "validation",
                   "input-schema",
-                  "tool_surface"
+                  "schema_hygiene",
+                  "spec"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
-                "score_category": "tool_surface",
+                "risk_category": "schema_hygiene",
+                "score_category": "spec",
+                "score_impact": 10
+              }
+            },
+            {
+              "id": "missing_required_for_critical_fields",
+              "name": "Missing required critical fields",
+              "shortDescription": {
+                "text": "Missing required critical fields"
+              },
+              "fullDescription": {
+                "text": "Critical schema fields such as path, command, or URL should be required."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Critical schema fields such as path, command, or URL should be required. Severity: warning. Score impact: 10."
+              },
+              "properties": {
+                "tags": [
+                  "schema",
+                  "validation",
+                  "input-schema",
+                  "schema_hygiene",
+                  "spec"
+                ],
+                "precision": "medium",
+                "problem.severity": "warning",
+                "risk_category": "schema_hygiene",
+                "score_category": "spec",
                 "score_impact": 10
               }
             },
@@ -139,10 +267,42 @@
                 "tags": [
                   "capability",
                   "execution",
+                  "command_execution",
                   "tool_surface"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
+                "risk_category": "command_execution",
+                "score_category": "tool_surface",
+                "score_impact": 20
+              }
+            },
+            {
+              "id": "dangerous_shell_download_exec",
+              "name": "Dangerous download-and-execute tool",
+              "shortDescription": {
+                "text": "Dangerous download-and-execute tool"
+              },
+              "fullDescription": {
+                "text": "Tools that combine remote download with shell execution are high risk."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "Tools that combine remote download with shell execution are high risk. Severity: error. Score impact: 20."
+              },
+              "properties": {
+                "tags": [
+                  "capability",
+                  "execution",
+                  "network",
+                  "command_execution",
+                  "tool_surface"
+                ],
+                "precision": "medium",
+                "problem.severity": "error",
+                "risk_category": "command_execution",
                 "score_category": "tool_surface",
                 "score_impact": 20
               }
@@ -166,12 +326,162 @@
                 "tags": [
                   "capability",
                   "filesystem",
+                  "file_system",
                   "tool_surface"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
+                "risk_category": "file_system",
                 "score_category": "tool_surface",
                 "score_impact": 20
+              }
+            },
+            {
+              "id": "dangerous_fs_delete_tool",
+              "name": "Dangerous filesystem delete tool",
+              "shortDescription": {
+                "text": "Dangerous filesystem delete tool"
+              },
+              "fullDescription": {
+                "text": "Tools that delete files or directories are high risk."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "Tools that delete files or directories are high risk. Severity: error. Score impact: 20."
+              },
+              "properties": {
+                "tags": [
+                  "capability",
+                  "filesystem",
+                  "destructive",
+                  "file_system",
+                  "tool_surface"
+                ],
+                "precision": "medium",
+                "problem.severity": "error",
+                "risk_category": "file_system",
+                "score_category": "tool_surface",
+                "score_impact": 20
+              }
+            },
+            {
+              "id": "dangerous_http_request_tool",
+              "name": "Dangerous HTTP request tool",
+              "shortDescription": {
+                "text": "Dangerous HTTP request tool"
+              },
+              "fullDescription": {
+                "text": "Tools that issue arbitrary HTTP requests are high risk."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "Tools that issue arbitrary HTTP requests are high risk. Severity: error. Score impact: 20."
+              },
+              "properties": {
+                "tags": [
+                  "capability",
+                  "network",
+                  "http",
+                  "tool_surface"
+                ],
+                "precision": "medium",
+                "problem.severity": "error",
+                "risk_category": "network",
+                "score_category": "tool_surface",
+                "score_impact": 20
+              }
+            },
+            {
+              "id": "dangerous_network_tool",
+              "name": "Dangerous network tool",
+              "shortDescription": {
+                "text": "Dangerous network tool"
+              },
+              "fullDescription": {
+                "text": "Tools that expose generic network access are high risk."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "Tools that expose generic network access are high risk. Severity: error. Score impact: 20."
+              },
+              "properties": {
+                "tags": [
+                  "capability",
+                  "network",
+                  "tool_surface"
+                ],
+                "precision": "medium",
+                "problem.severity": "error",
+                "risk_category": "network",
+                "score_category": "tool_surface",
+                "score_impact": 20
+              }
+            },
+            {
+              "id": "write_tool_without_scope_hint",
+              "name": "Write tool without scope hint",
+              "shortDescription": {
+                "text": "Write tool without scope hint"
+              },
+              "fullDescription": {
+                "text": "Filesystem mutation tools should document scope constraints clearly."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Filesystem mutation tools should document scope constraints clearly. Severity: warning. Score impact: 10."
+              },
+              "properties": {
+                "tags": [
+                  "capability",
+                  "filesystem",
+                  "scope",
+                  "external_side_effects",
+                  "tool_surface"
+                ],
+                "precision": "medium",
+                "problem.severity": "warning",
+                "risk_category": "external_side_effects",
+                "score_category": "tool_surface",
+                "score_impact": 10
+              }
+            },
+            {
+              "id": "tool_description_mentions_destructive_access",
+              "name": "Description mentions destructive access",
+              "shortDescription": {
+                "text": "Description mentions destructive access"
+              },
+              "fullDescription": {
+                "text": "Tool descriptions should make destructive broad-scope access easy to spot."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Tool descriptions should make destructive broad-scope access easy to spot. Severity: warning. Score impact: 10."
+              },
+              "properties": {
+                "tags": [
+                  "tools",
+                  "description",
+                  "destructive",
+                  "capability",
+                  "external_side_effects",
+                  "tool_surface"
+                ],
+                "precision": "medium",
+                "problem.severity": "warning",
+                "risk_category": "external_side_effects",
+                "score_category": "tool_surface",
+                "score_impact": 10
               }
             }
           ]
@@ -187,8 +497,47 @@
       ],
       "results": [
         {
-          "ruleId": "vague_tool_description",
+          "ruleId": "overly_generic_tool_name",
           "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Tool 'do_it' uses an overly generic name that hides its behavior."
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "e92487b6734c4b2941222b39cf769d345860a914a201e0c96718f0bc976c8617"
+          },
+          "properties": {
+            "risk_category": "metadata_hygiene",
+            "score_category": "spec",
+            "score_impact": 10,
+            "tool_name": "do_it",
+            "finding_category": "tool-identity",
+            "evidence": [
+              "tool_name='do_it'"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/insecure-server/server.py"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "tool_name='do_it'"
+              }
+            }
+          ],
+          "rule": {
+            "id": "overly_generic_tool_name"
+          }
+        },
+        {
+          "ruleId": "vague_tool_description",
+          "ruleIndex": 3,
           "level": "warning",
           "message": {
             "text": "Tool 'do_it' uses a vague description that does not explain its behavior clearly."
@@ -197,7 +546,8 @@
             "primaryLocationLineHash": "d4baaac7a1cf5eaf452c3c70de57a85ea47f3401ea40321d2c82f1b99ae07971"
           },
           "properties": {
-            "score_category": "tool_surface",
+            "risk_category": "metadata_hygiene",
+            "score_category": "spec",
             "score_impact": 10,
             "tool_name": "do_it",
             "finding_category": "tool-description",
@@ -227,23 +577,24 @@
           }
         },
         {
-          "ruleId": "weak_input_schema",
-          "ruleIndex": 3,
+          "ruleId": "schema_allows_arbitrary_properties",
+          "ruleIndex": 5,
           "level": "warning",
           "message": {
-            "text": "Tool 'debug_payload' exposes a weak input schema that accepts poorly constrained input."
+            "text": "Tool 'debug_payload' allows arbitrary additional input properties."
           },
           "partialFingerprints": {
-            "primaryLocationLineHash": "2d6880eb9f5a310c37f53f3eb0de96209ada15a1fad22d5191eff31cf657d787"
+            "primaryLocationLineHash": "8d36e623640eadf17ddb18185c403f6625d35b8eb3838f9b9403d0a8607e656c"
           },
           "properties": {
-            "score_category": "tool_surface",
+            "risk_category": "schema_hygiene",
+            "score_category": "spec",
             "score_impact": 10,
             "tool_name": "debug_payload",
             "finding_category": "input-schema",
             "evidence": [
               "additionalProperties=True",
-              "properties=<missing-or-empty>"
+              "property_count=0"
             ]
           },
           "locations": [
@@ -262,12 +613,51 @@
             }
           ],
           "rule": {
+            "id": "schema_allows_arbitrary_properties"
+          }
+        },
+        {
+          "ruleId": "weak_input_schema",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Tool 'debug_payload' exposes a weak input schema that leaves free-form input underconstrained."
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "b79a90dd4f12aa8bf1476f3b4d001e16e89df7b3b47efcae11dc411a96970d5e"
+          },
+          "properties": {
+            "risk_category": "schema_hygiene",
+            "score_category": "spec",
+            "score_impact": 10,
+            "tool_name": "debug_payload",
+            "finding_category": "input-schema",
+            "evidence": [
+              "matched_heuristic=inputful_tool_with_empty_object_schema"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/insecure-server/server.py"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "matched_heuristic=inputful_tool_with_empty_object_schema"
+              }
+            }
+          ],
+          "rule": {
             "id": "weak_input_schema"
           }
         },
         {
           "ruleId": "dangerous_exec_tool",
-          "ruleIndex": 4,
+          "ruleIndex": 8,
           "level": "error",
           "message": {
             "text": "Tool 'exec_command' appears to expose host command execution."
@@ -276,6 +666,7 @@
             "primaryLocationLineHash": "72ef9a2139b24a15d49158424b19f5fb9a89a07d27f66c25278d490f6543dc09"
           },
           "properties": {
+            "risk_category": "command_execution",
             "score_category": "tool_surface",
             "score_impact": 20,
             "tool_name": "exec_command",
@@ -307,7 +698,7 @@
         },
         {
           "ruleId": "dangerous_fs_write_tool",
-          "ruleIndex": 5,
+          "ruleIndex": 10,
           "level": "error",
           "message": {
             "text": "Tool 'write_file' appears to provide filesystem write access."
@@ -316,6 +707,7 @@
             "primaryLocationLineHash": "4828ab4bad018e12f98728c62603e4abbbbab48d1235504194da21035fa55b4b"
           },
           "properties": {
+            "risk_category": "file_system",
             "score_category": "tool_surface",
             "score_impact": 20,
             "tool_name": "write_file",
@@ -344,6 +736,46 @@
           ],
           "rule": {
             "id": "dangerous_fs_write_tool"
+          }
+        },
+        {
+          "ruleId": "write_tool_without_scope_hint",
+          "ruleIndex": 14,
+          "level": "warning",
+          "message": {
+            "text": "Tool 'write_file' modifies the filesystem without any visible scope hint."
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "445e9230405e475d5b431aefc81be46b8a72dab9bd4d0650c0d6cbca04185bd9"
+          },
+          "properties": {
+            "risk_category": "external_side_effects",
+            "score_category": "tool_surface",
+            "score_impact": 10,
+            "tool_name": "write_file",
+            "finding_category": "capability",
+            "evidence": [
+              "path_keys=['path']",
+              "scope_hint=<missing>"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/insecure-server/server.py"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "path_keys=['path']"
+              }
+            }
+          ],
+          "rule": {
+            "id": "write_tool_without_scope_hint"
           }
         }
       ]

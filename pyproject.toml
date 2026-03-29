@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-trust-kit"
-version = "0.3.0"
-description = "CI-first deterministic trust scoring for MCP servers."
+version = "0.4.0"
+description = "CI-first deterministic surface-risk scoring for MCP servers."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]

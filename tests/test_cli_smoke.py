@@ -12,4 +12,4 @@ def test_cli_help_smoke(capsys: CaptureFixture[str]) -> None:
 
     assert exit_code == 0
     assert "mcp-trust" in captured.out
-    assert "Deterministic trust scoring toolkit for MCP servers." in captured.out
+    assert "Deterministic surface-risk scoring for MCP servers." in captured.out

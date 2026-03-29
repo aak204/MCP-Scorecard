@@ -73,6 +73,7 @@ def _serialize_finding(finding: Finding) -> dict[str, object]:
         "title": finding.title,
         "severity": finding.severity.value,
         "category": None if finding.category is None else finding.category.value,
+        "risk_category": finding.risk_category.value,
         "score_category": finding.score_category.value,
         "tool_name": finding.tool_name,
         "message": finding.message,

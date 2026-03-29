@@ -8,6 +8,7 @@ from mcp_trust.models import (
     FindingLevel,
     NormalizedServer,
     Report,
+    RiskCategory,
     ScoreBreakdown,
     ScoreCategory,
 )
@@ -20,6 +21,7 @@ def test_score_breakdown_tracks_category_scores_and_clamps_total() -> None:
             rule_id="spec.rule",
             level=FindingLevel.WARNING,
             category=FindingCategory.INPUT_SCHEMA,
+            risk_category=RiskCategory.SCHEMA_HYGIENE,
             score_category=ScoreCategory.SPEC,
             message="Spec issue.",
             penalty=15,
@@ -28,6 +30,7 @@ def test_score_breakdown_tracks_category_scores_and_clamps_total() -> None:
             rule_id="auth.rule",
             level=FindingLevel.ERROR,
             category=FindingCategory.CAPABILITY,
+            risk_category=RiskCategory.EXTERNAL_SIDE_EFFECTS,
             score_category=ScoreCategory.AUTH,
             message="Auth issue.",
             penalty=35,
@@ -36,6 +39,7 @@ def test_score_breakdown_tracks_category_scores_and_clamps_total() -> None:
             rule_id="tool.rule",
             level=FindingLevel.ERROR,
             category=FindingCategory.CAPABILITY,
+            risk_category=RiskCategory.COMMAND_EXECUTION,
             score_category=ScoreCategory.TOOL_SURFACE,
             message="Tool surface issue.",
             penalty=80,
@@ -59,6 +63,7 @@ def test_json_report_contains_total_score_and_category_breakdown() -> None:
             rule_id="tool.rule",
             level=FindingLevel.WARNING,
             category=FindingCategory.TOOL_DESCRIPTION,
+            risk_category=RiskCategory.METADATA_HYGIENE,
             score_category=ScoreCategory.TOOL_SURFACE,
             title="Vague tool description",
             message="Tool description is too vague.",
@@ -91,10 +96,30 @@ def test_json_report_contains_total_score_and_category_breakdown() -> None:
                 "rule_id": "tool.rule",
                 "title": "Vague tool description",
                 "severity": "warning",
+                "risk_category": "metadata_hygiene",
                 "tool_name": "do_it",
                 "message": "Tool description is too vague.",
                 "score_impact": 10,
             }
+        ],
+        "risk_summary": [
+            {
+                "risk_category": "metadata_hygiene",
+                "label": "metadata hygiene",
+                "finding_count": 1,
+                "penalty_points": 10,
+                "tool_names": ["do_it"],
+            }
+        ],
+        "why_score": "Score is driven mainly by detected metadata hygiene issues.",
+        "review_first_tools": ["do_it"],
+        "score_meaning": (
+            "Deterministic surface-risk score based on protocol/tool hygiene "
+            "and risky exposed capabilities."
+        ),
+        "score_limits": [
+            "Low score means higher exposed surface risk, not malicious intent.",
+            "High score means fewer deterministic findings, not a guarantee of safety.",
         ],
     }
     assert json_data["score"]["category_breakdown"] == {

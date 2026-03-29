@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
-from mcp_trust.models import Finding, Report, ScoreCategory
-from mcp_trust.reporters.summary import build_report_summary
+from mcp_trust.models import Report, RiskCategory, ScoreCategory
+from mcp_trust.reporters.summary import (
+    SummaryFinding,
+    build_report_summary,
+    is_capability_category,
+)
 
 
 class TerminalReporter:
@@ -17,6 +21,13 @@ class TerminalReporter:
         summary = build_report_summary(report)
         severity_counts = summary["severity_counts"]
         protocol_version = _protocol_version(report)
+        capability_labels = [
+            bucket["label"]
+            for bucket in summary["risk_summary"]
+            if is_capability_category(RiskCategory(bucket["risk_category"]))
+        ]
+        high_risk_capabilities = ", ".join(capability_labels) if capability_labels else "none"
+        review_first = ", ".join(summary["review_first_tools"]) or "none"
 
         lines = [
             f"Server: {report.server.name or '<unknown>'}",
@@ -31,6 +42,10 @@ class TerminalReporter:
                 f"info={severity_counts['info']}"
             ),
             f"Total Score: {report.total_score}/{report.score.max_score}",
+            f"Score Meaning: {summary['score_meaning']}",
+            f"Why This Score: {summary['why_score']}",
+            f"High-Risk Capabilities: {high_risk_capabilities}",
+            f"Review First: {review_first}",
             "Category Scores:",
         ]
         if protocol_version is not None:
@@ -44,21 +59,26 @@ class TerminalReporter:
             )
 
         lines.append("Top Findings:")
-        if not report.findings:
+        if not summary["top_findings"]:
             lines.append("- none")
         else:
-            for finding in report.findings[:5]:
+            for finding in summary["top_findings"]:
                 lines.append(_format_finding_line(finding))
+
+        lines.append("Score Limits:")
+        for note in summary["score_limits"]:
+            lines.append(f"- {note}")
 
         return "\n".join(lines) + "\n"
 
 
-def _format_finding_line(finding: Finding) -> str:
+def _format_finding_line(finding: SummaryFinding) -> str:
     """Return one concise terminal line for a finding."""
-    tool_suffix = "" if finding.tool_name is None else f" [{finding.tool_name}]"
+    tool_name = finding["tool_name"]
+    tool_suffix = "" if tool_name is None else f" [{tool_name}]"
     return (
-        f"- {finding.severity.value.upper()} {finding.rule_id}{tool_suffix}: "
-        f"{finding.message}"
+        f"- {str(finding['severity']).upper()} {finding['rule_id']}{tool_suffix}: "
+        f"{finding['message']}"
     )
 
 

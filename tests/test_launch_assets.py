@@ -16,13 +16,16 @@ def test_sample_reports_exist_and_match_current_demo_shape() -> None:
     terminal_text = terminal_report.read_text(encoding="utf-8")
 
     assert json_data["server"]["name"] == "Insecure Demo Server"
-    assert json_data["total_score"] == 40
-    assert json_data["summary"]["finding_count"] == 4
+    assert json_data["total_score"] == 10
+    assert json_data["summary"]["finding_count"] == 7
+    assert json_data["summary"]["why_score"] == (
+        "Score is driven mainly by detected command execution and file system issues."
+    )
     assert sarif_data["version"] == "2.1.0"
     assert len(sarif_data["runs"]) == 1
-    assert len(sarif_data["runs"][0]["results"]) == 4
+    assert len(sarif_data["runs"][0]["results"]) == 7
     assert "```text" in terminal_text
-    assert "Total Score: 40/100" in terminal_text
+    assert "Total Score: 10/100" in terminal_text
 
 
 def test_docs_and_readme_link_launch_assets() -> None:

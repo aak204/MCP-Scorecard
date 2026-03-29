@@ -13,7 +13,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Build the top-level CLI parser."""
     parser = argparse.ArgumentParser(
         prog="mcp-trust",
-        description="Deterministic trust scoring toolkit for MCP servers.",
+        description="Deterministic surface-risk scoring for MCP servers.",
         epilog="Use 'mcp-trust scan --help' for scan command options.",
     )
     parser.add_argument(

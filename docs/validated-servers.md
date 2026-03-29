@@ -5,6 +5,8 @@ This note records a few reproducible validation runs on public MCP servers.
 It is not a leaderboard and it is not a claim that a low score means a server is "bad".
 The point is narrower: show that `MCP Trust Kit` works on real servers outside the demo fixture.
 
+**MCP Trust Kit scores surface risk, not business intent.**
+
 Validation date: `2026-03-29`
 
 Reference sources for the public packages used here:
@@ -28,18 +30,27 @@ Server:
 
 Command:
 
+```bash
+mcp-trust scan --cmd python examples/insecure-server/server.py
+```
+
+Windows:
+
 ```powershell
 .\.venv\Scripts\mcp-trust scan --cmd .\.venv\Scripts\python examples\insecure-server\server.py
 ```
 
 Observed result:
 
-- score: `40/100`
+- score: `10/100`
 - findings:
+  - `overly_generic_tool_name`
   - `vague_tool_description`
+  - `schema_allows_arbitrary_properties`
   - `weak_input_schema`
   - `dangerous_exec_tool`
   - `dangerous_fs_write_tool`
+  - `write_tool_without_scope_hint`
 
 Caveat:
 
@@ -51,7 +62,13 @@ Package:
 
 - `@modelcontextprotocol/server-memory@2026.1.26`
 
-Command used on Windows:
+Command:
+
+```bash
+mcp-trust scan --cmd npx -y @modelcontextprotocol/server-memory@2026.1.26
+```
+
+Windows:
 
 ```powershell
 .\.venv\Scripts\mcp-trust scan --cmd C:\nvm4w\nodejs\npx.cmd -y @modelcontextprotocol/server-memory@2026.1.26
@@ -60,21 +77,18 @@ Command used on Windows:
 Observed result:
 
 - server name: `memory-server`
-- score: `90/100`
-- finding count: `1`
-- rule hit:
-  - `weak_input_schema` on `read_graph`
+- score: `100/100`
+- finding count: `0`
 
-Why this is still a "good" case:
+Why this is a good case:
 
-- no dangerous exec-like tools were flagged
-- no filesystem write tools were flagged
-- descriptions and most schemas were clear
+- no command execution surface was flagged
+- no filesystem mutation surface was flagged
+- no noisy schema warning was emitted for a no-arg tool
 
 Caveat:
 
-- the current `weak_input_schema` rule treats an empty object schema as a warning
-- that is a deliberate v0.3.0 heuristic, not a claim that the server is unsafe
+- `100/100` means no current deterministic findings, not a safety guarantee
 
 ## 3. Official Filesystem Server
 
@@ -82,7 +96,14 @@ Package:
 
 - `@modelcontextprotocol/server-filesystem@2026.1.14`
 
-Command used on Windows:
+Command:
+
+```bash
+mkdir -p .tmp-mcp-fs
+mcp-trust scan --cmd npx -y @modelcontextprotocol/server-filesystem@2026.1.14 .tmp-mcp-fs
+```
+
+Windows:
 
 ```powershell
 $tmp = Join-Path $PWD ".tmp-mcp-fs"
@@ -93,19 +114,18 @@ New-Item -ItemType Directory -Force $tmp | Out-Null
 Observed result:
 
 - server name: `secure-filesystem-server`
-- score: `30/100`
-- finding count: `4`
+- score: `40/100`
+- finding count: `3`
 - rule hits:
-  - `weak_input_schema` on `list_allowed_directories`
   - `dangerous_fs_write_tool` on `write_file`
   - `dangerous_fs_write_tool` on `edit_file`
   - `dangerous_fs_write_tool` on `create_directory`
 
-Why this is a useful "risky" case:
+Why this is a useful risky case:
 
 - the server legitimately exposes filesystem mutation tools
-- the low score reflects risky tool surface, not exploitability
-- this is exactly the kind of capability that many teams want surfaced in CI
+- the low score reflects blast radius, not exploitability
+- this is exactly the kind of capability many teams want surfaced in CI
 
 Caveat:
 

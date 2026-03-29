@@ -7,6 +7,7 @@ from mcp_trust.models import (
     NormalizedServer,
     NormalizedTool,
     Report,
+    RiskCategory,
     ScoreBreakdown,
     ScoreCategory,
 )
@@ -48,6 +49,7 @@ def test_terminal_reporter_renders_stable_summary() -> None:
             level=FindingLevel.ERROR,
             title="Dangerous execution tool",
             category=FindingCategory.CAPABILITY,
+            risk_category=RiskCategory.COMMAND_EXECUTION,
             score_category=ScoreCategory.TOOL_SURFACE,
             message="Tool 'exec_command' appears to expose host command execution.",
             evidence=("input_keys=['command']",),
@@ -59,7 +61,8 @@ def test_terminal_reporter_renders_stable_summary() -> None:
             level=FindingLevel.WARNING,
             title="Vague tool description",
             category=FindingCategory.TOOL_DESCRIPTION,
-            score_category=ScoreCategory.TOOL_SURFACE,
+            risk_category=RiskCategory.METADATA_HYGIENE,
+            score_category=ScoreCategory.SPEC,
             message=(
                 "Tool 'do_it' uses a vague description that does not "
                 "explain its behavior clearly."
@@ -86,11 +89,20 @@ def test_terminal_reporter_renders_stable_summary() -> None:
         "Findings: 2",
         "Severity: error=1, warning=1, info=0",
         "Total Score: 70/100",
+        (
+            "Score Meaning: Deterministic surface-risk score based on protocol/tool hygiene "
+            "and risky exposed capabilities."
+        ),
+        (
+            "Why This Score: Score is driven mainly by detected command execution issues."
+        ),
+        "High-Risk Capabilities: command execution",
+        "Review First: exec_command, do_it",
         "Category Scores:",
-        "- spec: 100/100 (penalties: 0)",
+        "- spec: 90/100 (penalties: 10)",
         "- auth: 100/100 (penalties: 0)",
         "- secrets: 100/100 (penalties: 0)",
-        "- tool_surface: 70/100 (penalties: 30)",
+        "- tool_surface: 80/100 (penalties: 20)",
         "Top Findings:",
         (
             "- ERROR dangerous_exec_tool [exec_command]: Tool 'exec_command' "
@@ -100,4 +112,7 @@ def test_terminal_reporter_renders_stable_summary() -> None:
             "- WARNING vague_tool_description [do_it]: Tool 'do_it' uses a vague "
             "description that does not explain its behavior clearly."
         ),
+        "Score Limits:",
+        "- Low score means higher exposed surface risk, not malicious intent.",
+        "- High score means fewer deterministic findings, not a guarantee of safety.",
     ]

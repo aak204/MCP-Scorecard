@@ -5,6 +5,7 @@ from mcp_trust.models import (
     FindingCategory,
     FindingLevel,
     NormalizedServer,
+    RiskCategory,
     ScoreCategory,
 )
 from mcp_trust.rules import RuleRegistry
@@ -21,6 +22,7 @@ class DummyRule(Rule):
             summary=f"Summary for {rule_id}",
             severity=FindingLevel.INFO,
             category=FindingCategory.TOOL_DESCRIPTION,
+            risk_category=RiskCategory.METADATA_HYGIENE,
             score_category=ScoreCategory.TOOL_SURFACE,
         )
 

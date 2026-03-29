@@ -21,21 +21,33 @@ The tool surface is intentionally problematic:
 
 From the repository root:
 
-```powershell
-python examples\insecure-server\server.py
+```bash
+python examples/insecure-server/server.py
 ```
 
 Scan it with MCP Trust Kit:
 
-```powershell
-mcp-trust scan --cmd python examples\insecure-server\server.py
+```bash
+mcp-trust scan --cmd python examples/insecure-server/server.py
 ```
 
-Or, if using the local virtual environment:
+With the local virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
+mcp-trust scan --cmd python examples/insecure-server/server.py
+```
+
+<details>
+<summary>Windows (PowerShell)</summary>
 
 ```powershell
 .\.venv\Scripts\mcp-trust scan --cmd .\.venv\Scripts\python examples\insecure-server\server.py
 ```
+
+</details>
 
 Sample launch artifacts generated from this server:
 
@@ -49,8 +61,9 @@ This example should reliably trigger findings such as:
 
 - dangerous shell execution capability
 - filesystem write capability
-- vague or low-signal tool description
-- overly permissive input schema
+- vague or low-signal metadata
+- underconstrained input schema
+- missing scope hint for filesystem mutation
 
 ## Notes
 

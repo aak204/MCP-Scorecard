@@ -41,21 +41,35 @@ def test_sarif_report_contains_rules_results_and_locations() -> None:
     assert {rule["id"] for rule in driver["rules"]} == {
         "duplicate_tool_names",
         "missing_tool_description",
+        "overly_generic_tool_name",
         "vague_tool_description",
+        "missing_schema_type",
+        "schema_allows_arbitrary_properties",
         "weak_input_schema",
+        "missing_required_for_critical_fields",
         "dangerous_exec_tool",
+        "dangerous_shell_download_exec",
         "dangerous_fs_write_tool",
+        "dangerous_fs_delete_tool",
+        "dangerous_http_request_tool",
+        "dangerous_network_tool",
+        "write_tool_without_scope_hint",
+        "tool_description_mentions_destructive_access",
     }
 
     results = runs[0]["results"]
-    assert len(results) == 4
+    assert len(results) == 7
     assert {result["ruleId"] for result in results} == {
+        "overly_generic_tool_name",
         "vague_tool_description",
+        "schema_allows_arbitrary_properties",
         "weak_input_schema",
         "dangerous_exec_tool",
         "dangerous_fs_write_tool",
+        "write_tool_without_scope_hint",
     }
     assert {result["level"] for result in results} == {"warning", "error"}
+    assert all("risk_category" in result["properties"] for result in results)
     assert all("partialFingerprints" in result for result in results)
     assert all(
         result["locations"][0]["physicalLocation"]["region"]["startLine"] == 1
@@ -89,6 +103,6 @@ def test_scan_cli_writes_sarif_report(
     parsed = json.loads(rendered)
 
     assert exit_code == 0
-    assert "Total Score: 40/100" in captured.out
+    assert "Total Score: 10/100" in captured.out
     assert parsed["version"] == "2.1.0"
-    assert parsed["runs"][0]["results"][0]["ruleId"] == "vague_tool_description"
+    assert parsed["runs"][0]["results"][0]["ruleId"] == "overly_generic_tool_name"
