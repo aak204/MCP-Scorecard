@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/aak204/MCP-Trust-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/aak204/MCP-Trust-Kit/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/aak204/MCP-Trust-Kit?sort=semver)](https://github.com/aak204/MCP-Trust-Kit/releases)
-[![License](https://img.shields.io/github/license/aak204/MCP-Trust-Kit)](LICENSE)
+[![License](https://img.shields.io/github/license/aak204/MCP-Trust-Kit?v=1)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 
 ![MCP Trust Kit terminal scan showing Total Score 40/100 and dangerous filesystem write findings](docs/assets/filesystem-scan-hero.svg)
