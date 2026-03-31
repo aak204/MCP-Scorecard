@@ -271,6 +271,12 @@ More detail:
 - [docs/assets/filesystem-scan-hero.svg](docs/assets/filesystem-scan-hero.svg)
 - [.github/workflows/example.yml](.github/workflows/example.yml)
 
+## Ecosystem & Complementary Tools
+
+`MCP Trust Kit` is designed as a **Layer 1 (Static Risk)** scanner. For a complete agentic DevSecOps pipeline, we recommend pairing it with runtime observability tools:
+
+* [**Veridict**](https://github.com/xkumakichi/veridict) (Layer 2 - Runtime Trust): A lightweight middleware that logs actual tool executions and gives a trust verdict based on real execution history. While MCP Trust Kit answers *"Is the blast radius structurally safe?"*, Veridict answers *"Is the server actually reliable in production?"*.
+
 ## Roadmap
 
 Near-term work after `v0.4.0`:
