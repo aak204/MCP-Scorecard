@@ -18,6 +18,7 @@ def test_sample_reports_exist_and_match_current_demo_shape() -> None:
     hero_svg = hero_image.read_text(encoding="utf-8")
 
     assert json_data["server"]["name"] == "Insecure Demo Server"
+    assert "scan_timestamp" in json_data
     assert json_data["total_score"] == 10
     assert json_data["summary"]["finding_count"] == 7
     assert json_data["summary"]["why_score"] == (
@@ -25,6 +26,7 @@ def test_sample_reports_exist_and_match_current_demo_shape() -> None:
     )
     assert sarif_data["version"] == "2.1.0"
     assert len(sarif_data["runs"]) == 1
+    assert "scan_timestamp" in sarif_data["runs"][0]["properties"]
     assert len(sarif_data["runs"][0]["results"]) == 7
     assert "```text" in terminal_text
     assert "Total Score: 10/100" in terminal_text

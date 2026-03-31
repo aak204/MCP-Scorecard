@@ -82,6 +82,8 @@ def test_json_report_contains_total_score_and_category_breakdown() -> None:
     rendered = JsonReporter().render(report)
     parsed = json.loads(rendered)
 
+    assert json_data["scan_timestamp"] == report.generated_at.isoformat()
+    assert json_data["generated_at"] == report.generated_at.isoformat()
     assert json_data["total_score"] == 90
     assert json_data["summary"] == {
         "tool_count": 0,
@@ -160,5 +162,6 @@ def test_json_report_contains_total_score_and_category_breakdown() -> None:
     }
     assert json_data["tools"] == []
     assert parsed["total_score"] == 90
+    assert parsed["scan_timestamp"] == report.generated_at.isoformat()
     assert parsed["score"]["total_score"] == 90
     assert parsed["findings"][0]["score_category"] == "tool_surface"

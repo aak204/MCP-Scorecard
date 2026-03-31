@@ -29,10 +29,12 @@ class JsonReporter:
 
 def report_to_json_data(report: Report) -> dict[str, object]:
     """Return a JSON-compatible representation of a report."""
+    scan_timestamp = report.scan_timestamp.isoformat()
     return {
         "schema_version": report.schema_version,
         "toolkit_version": report.toolkit_version,
-        "generated_at": report.generated_at.isoformat(),
+        "scan_timestamp": scan_timestamp,
+        "generated_at": scan_timestamp,
         "server": _serialize_server(report.server),
         "tools": [_serialize_tool(tool) for tool in report.server.tools],
         "findings": [_serialize_finding(finding) for finding in report.findings],

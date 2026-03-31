@@ -38,6 +38,8 @@ def test_sarif_report_contains_rules_results_and_locations() -> None:
     assert len(runs) == 1
     driver = runs[0]["tool"]["driver"]
     assert driver["name"] == "MCP Trust Kit"
+    assert runs[0]["properties"]["scan_timestamp"] == report.generated_at.isoformat()
+    assert runs[0]["invocations"][0]["endTimeUtc"] == report.generated_at.isoformat()
     assert {rule["id"] for rule in driver["rules"]} == {
         "duplicate_tool_names",
         "missing_tool_description",
@@ -105,4 +107,5 @@ def test_scan_cli_writes_sarif_report(
     assert exit_code == 0
     assert "Total Score: 10/100" in captured.out
     assert parsed["version"] == "2.1.0"
+    assert "scan_timestamp" in parsed["runs"][0]["properties"]
     assert parsed["runs"][0]["results"][0]["ruleId"] == "overly_generic_tool_name"

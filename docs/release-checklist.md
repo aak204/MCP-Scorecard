@@ -1,6 +1,6 @@
 # Release Checklist
 
-Use this list before publishing `v0.4.0`.
+Use this list before publishing `v0.5.0`.
 
 ## Repository
 
@@ -28,7 +28,7 @@ Windows note:
 - run `pip install .`
 - run `mcp-trust --help`
 - verify `import mcp_trust; print(mcp_trust.__version__)`
-- verify package metadata shows version `0.4.0`
+- verify package metadata shows version `0.5.0`
 
 ## Examples And Reports
 
@@ -47,7 +47,7 @@ Windows note:
 
 ## Release
 
-- create tag `v0.4.0`
+- create tag `v0.5.0`
 - publish GitHub Release notes from `CHANGELOG.md`
 - attach or link sample artifacts if desired
 - smoke-test the published action from a separate repository

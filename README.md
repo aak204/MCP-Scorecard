@@ -11,7 +11,8 @@
 
 `MCP Trust Kit` scans a local MCP server over `stdio`, discovers its tools, runs deterministic
 checks for protocol and tool hygiene plus risky exposed capabilities, calculates a score from
-`0..100`, and emits terminal, JSON, and SARIF output that fits cleanly into CI.
+`0..100`, and emits terminal, JSON, and SARIF output that fits cleanly into CI. JSON and SARIF
+include an explicit `scan_timestamp` field for downstream consumers.
 
 **MCP Trust Kit scores surface risk, not business intent.**
 
@@ -122,7 +123,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run MCP Trust Kit
-        uses: aak204/MCP-Trust-Kit@v0.4.0
+        uses: aak204/MCP-Trust-Kit@v0.5.0
         with:
           cmd: python path/to/your/server.py
           min-score: "80"
@@ -141,7 +142,7 @@ The action fails when:
 - the scan fails technically
 - the final score is below `min-score`
 
-If the `v0.4.0` tag is not published yet, use a branch name or commit SHA while testing privately.
+If the `v0.5.0` tag is not published yet, use a branch name or commit SHA while testing privately.
 
 ## Example Output
 
@@ -228,7 +229,7 @@ The scoring model is intentionally simple and predictable:
 3. clamp to `0..100`
 4. compute category scores the same way
 
-Severity mapping in `v0.4.0`:
+Severity mapping in `v0.5.0`:
 
 | Severity | Penalty |
 | --- | --- |
@@ -273,7 +274,7 @@ More detail:
 
 ## Roadmap
 
-Near-term work after `v0.4.0`:
+Near-term work after `v0.5.0`:
 
 - expand deterministic rules for `auth` and `secrets`
 - improve SARIF location mapping when source context is available

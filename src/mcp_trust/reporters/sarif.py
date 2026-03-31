@@ -29,6 +29,7 @@ def report_to_sarif_data(report: Report) -> dict[str, object]:
     """Return a SARIF-compatible representation of a report."""
     rule_descriptors = tuple(report.rule_descriptors.values())
     artifact_uri = _infer_artifact_uri(report)
+    scan_timestamp = report.scan_timestamp.isoformat()
 
     return {
         "$schema": SARIF_SCHEMA_URI,
@@ -48,9 +49,13 @@ def report_to_sarif_data(report: Report) -> dict[str, object]:
                 "invocations": [
                     {
                         "executionSuccessful": True,
+                        "endTimeUtc": scan_timestamp,
                         "workingDirectory": {"uri": Path.cwd().as_uri()},
                     }
                 ],
+                "properties": {
+                    "scan_timestamp": scan_timestamp,
+                },
                 "results": [
                     _serialize_result(
                         finding,

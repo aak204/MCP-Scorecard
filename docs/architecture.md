@@ -1,6 +1,6 @@
 # Architecture
 
-`MCP Trust Kit` keeps the `v0.4.0` pipeline intentionally small and deterministic.
+`MCP Trust Kit` keeps the `v0.5.0` pipeline intentionally small and deterministic.
 
 ```mermaid
 flowchart LR
@@ -18,7 +18,7 @@ flowchart LR
 
 Key properties:
 
-- one MCP transport for `v0.4.0`: local `stdio`
+- one MCP transport for `v0.5.0`: local `stdio`
 - one deterministic rule per file
 - one deterministic surface-risk scoring engine
 - output layer formats an already-built `Report`

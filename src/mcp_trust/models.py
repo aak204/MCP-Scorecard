@@ -355,7 +355,7 @@ class Report:
     score: ScoreBreakdown
     rule_descriptors: dict[str, RuleDescriptor] = field(default_factory=dict)
     generated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
-    schema_version: str = "0.4"
+    schema_version: str = "0.5"
     toolkit_version: str = __version__
     metadata: dict[str, JSONValue] = field(default_factory=dict)
 
@@ -386,3 +386,8 @@ class Report:
     def total_score(self) -> int:
         """Return the total score from the scoring breakdown."""
         return self.score.total_score
+
+    @property
+    def scan_timestamp(self) -> datetime:
+        """Return the canonical scan timestamp for downstream consumers."""
+        return self.generated_at

@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project uses Semantic Versioning.
 
+## [0.5.0] - 2026-03-31
+
+Integration-driven release.
+
+### Added
+
+- explicit `scan_timestamp` field in JSON reports for downstream temporal-decay consumers
+- matching scan timestamp metadata in SARIF run properties and invocation metadata
+- release-ready interface contract for Layer 1 style static baseline consumers
+
+### Changed
+
+- bumped report schema version to `0.5`
+- refreshed release docs and README examples for `v0.5.0`
+- regenerated sample artifacts from the current scanner output
+
+### Notes
+
+- `generated_at` is retained for backward compatibility
+- `scan_timestamp` is the canonical cross-layer timestamp field going forward
+
 ## [0.4.0] - 2026-03-29
 
 First practically useful public release.

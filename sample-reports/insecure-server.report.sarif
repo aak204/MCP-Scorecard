@@ -6,7 +6,7 @@
       "tool": {
         "driver": {
           "name": "MCP Trust Kit",
-          "semanticVersion": "0.4.0",
+          "semanticVersion": "0.5.0",
           "rules": [
             {
               "id": "duplicate_tool_names",
@@ -490,11 +490,15 @@
       "invocations": [
         {
           "executionSuccessful": true,
+          "endTimeUtc": "2026-03-31T07:26:34.700338+00:00",
           "workingDirectory": {
             "uri": "file:///D:/Dev/MCP%20Trust%20Kit"
           }
         }
       ],
+      "properties": {
+        "scan_timestamp": "2026-03-31T07:26:34.700338+00:00"
+      },
       "results": [
         {
           "ruleId": "overly_generic_tool_name",

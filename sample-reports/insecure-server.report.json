@@ -1,7 +1,8 @@
 {
-  "schema_version": "0.4",
-  "toolkit_version": "0.4.0",
-  "generated_at": "2026-03-29T13:48:58.855632+00:00",
+  "schema_version": "0.5",
+  "toolkit_version": "0.5.0",
+  "scan_timestamp": "2026-03-31T07:26:34.700338+00:00",
+  "generated_at": "2026-03-31T07:26:34.700338+00:00",
   "server": {
     "target": "stdio:[\".\\\\.venv\\\\Scripts\\\\python\",\"examples\\\\insecure-server\\\\server.py\"]",
     "name": "Insecure Demo Server",

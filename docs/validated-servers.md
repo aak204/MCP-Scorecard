@@ -7,7 +7,7 @@ The point is narrower: show that `MCP Trust Kit` works on real servers outside t
 
 **MCP Trust Kit scores surface risk, not business intent.**
 
-Validation date: `2026-03-29`
+Validation date: `2026-03-31`
 
 Reference sources for the public packages used here:
 
