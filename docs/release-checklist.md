@@ -38,7 +38,7 @@ Windows note:
 - run `mcp-scorecard scan --json-out sample-reports/insecure-server.report.json --sarif sample-reports/insecure-server.report.sarif --cmd python examples/insecure-server/server.py`
 - confirm JSON, SARIF, and terminal sample artifacts match current output
 - confirm `examples/insecure-server/README.md` matches the current preferred CLI syntax
-- confirm `docs/validated-servers.md` matches the current release positioning
+- confirm `MCP_SCORECARD_30_SERVER_BATCH.md` and `MCP_SCORECARD_30_SERVER_BATCH.summary.json` match the current public-scan positioning
 
 ## GitHub Action
 

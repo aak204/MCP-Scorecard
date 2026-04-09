@@ -392,24 +392,39 @@ Current limitations are explicit:
 This scope is intentional. A smaller deterministic contract is more useful in CI than a broader
 but opaque system.
 
-## Validated On Real MCP Servers
+## Public Scan Snapshot
 
-Validation date: `2026-04-09`
+Instead of treating three servers as a definitive validation set, the more useful reference now is
+the full batch scan of `30` public MCP servers:
 
-| Server | Source | Result | Notes |
-| --- | --- | --- | --- |
-| `examples/insecure-server` | local demo | `10/100` | intentionally low-scoring deterministic fixture |
-| `@modelcontextprotocol/server-memory@2026.1.26` | official public package | `100/100` | revalidated with `MCP Scorecard 1.0.0`; no findings under current deterministic rules |
-| `@modelcontextprotocol/server-filesystem@2026.1.14` | official public package | `40/100` | revalidated with `MCP Scorecard 1.0.0`; legitimate filesystem mutation surface is surfaced for review |
+- [MCP_SCORECARD_30_SERVER_BATCH.md](MCP_SCORECARD_30_SERVER_BATCH.md)
+- [MCP_SCORECARD_30_SERVER_BATCH.summary.json](MCP_SCORECARD_30_SERVER_BATCH.summary.json)
 
-Commands, caveats, and findings:
+That batch is the better artifact because it separates:
 
-- [docs/validated-servers.md](docs/validated-servers.md)
+- servers that launch and score cleanly
+- servers that launch but surface deterministic review issues
+- servers that do not launch cleanly in blind CI conditions
+
+Selected interesting examples from the full batch:
+
+| Server | Result | Why it matters |
+| --- | --- | --- |
+| `@modelcontextprotocol/server-memory` | `100/100` | clean official baseline under the current rules |
+| `@modelcontextprotocol/server-filesystem` | `40/100` | legitimate filesystem mutation surface is clearly exposed by the scorecard |
+| `@modelcontextprotocol/server-everything` | `90/100` | useful official control case with only a minor ergonomics finding |
+| `ai.meetlark/mcp-server` | `100/100` | compact community example that launches and scores cleanly |
+| `ai.social-api/socialapi` | `50/100` | realistic product server with network-facing findings and one conformance issue |
+| `capital.hove/read-only-local-postgres-mcp-server` | `90/100` | good near-clean database example with a small schema ergonomics issue |
+
+The full batch also gave a more honest conclusion: `MCP Scorecard` looks useful, but reproducible
+public scanning at scale needs a separate preflight/launchability layer.
 
 ## Output And Architecture References
 
 - [docs/architecture.md](docs/architecture.md)
-- [docs/validated-servers.md](docs/validated-servers.md)
+- [MCP_SCORECARD_30_SERVER_BATCH.md](MCP_SCORECARD_30_SERVER_BATCH.md)
+- [MCP_SCORECARD_30_SERVER_BATCH.summary.json](MCP_SCORECARD_30_SERVER_BATCH.summary.json)
 - [docs/assets/filesystem-scan-hero.svg](docs/assets/filesystem-scan-hero.svg)
 - [examples/insecure-server/README.md](examples/insecure-server/README.md)
 - [.github/workflows/example.yml](.github/workflows/example.yml)

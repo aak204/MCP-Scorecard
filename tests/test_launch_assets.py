@@ -42,17 +42,21 @@ def test_sample_reports_exist_and_match_current_demo_shape() -> None:
 
 def test_docs_and_readme_link_launch_assets() -> None:
     architecture_doc = ROOT / "docs" / "architecture.md"
-    validated_servers_doc = ROOT / "docs" / "validated-servers.md"
+    batch_report = ROOT / "MCP_SCORECARD_30_SERVER_BATCH.md"
+    batch_summary = ROOT / "MCP_SCORECARD_30_SERVER_BATCH.summary.json"
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
     architecture_text = architecture_doc.read_text(encoding="utf-8")
-    validated_text = validated_servers_doc.read_text(encoding="utf-8")
+    batch_text = batch_report.read_text(encoding="utf-8")
+    batch_json = json.loads(batch_summary.read_text(encoding="utf-8"))
 
     assert "```mermaid" in architecture_text
     assert "sample-reports/insecure-server.report.json" in readme_text
     assert "sample-reports/insecure-server.report.sarif" in readme_text
     assert "sample-reports/insecure-server.terminal.md" in readme_text
     assert "docs/architecture.md" in readme_text
-    assert "docs/validated-servers.md" in readme_text
+    assert "MCP_SCORECARD_30_SERVER_BATCH.md" in readme_text
+    assert "MCP_SCORECARD_30_SERVER_BATCH.summary.json" in readme_text
     assert "docs/assets/filesystem-scan-hero.svg" in readme_text
-    assert "@modelcontextprotocol/server-memory@2026.1.26" in validated_text
-    assert "@modelcontextprotocol/server-filesystem@2026.1.14" in validated_text
+    assert "@modelcontextprotocol/server-memory" in batch_text
+    assert "@modelcontextprotocol/server-filesystem" in batch_text
+    assert batch_json["batch"]["attempted"] == 30
