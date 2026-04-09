@@ -1,10 +1,10 @@
-name: MCP Trust Kit
-description: Scan a local stdio MCP server, calculate a deterministic surface-risk score, and emit JSON and SARIF reports.
+name: MCP Scorecard
+description: Run a deterministic CI-first quality scorecard for a local stdio MCP server and emit JSON, SARIF, and PR-friendly summary output.
 
 branding:
-  icon: 'shield'
-  color: 'green'
-  
+  icon: shield
+  color: green
+
 inputs:
   cmd:
     description: Shell-style command used to start the MCP server over stdio.
@@ -14,13 +14,28 @@ inputs:
     required: false
     default: "0"
   json-out:
-    description: Path for the JSON report file.
+    description: Path for the JSON scorecard report file.
     required: false
-    default: mcp-trust-report.json
+    default: mcp-scorecard-report.json
   sarif-out:
     description: Path for the SARIF report file.
     required: false
-    default: mcp-trust-report.sarif
+    default: mcp-scorecard-report.sarif
+  markdown-out:
+    description: Optional path for a Markdown scorecard summary file.
+    required: false
+    default: ""
+
+outputs:
+  total-score:
+    description: Total score from the MCP Scorecard report.
+    value: ${{ steps.scorecard-contract.outputs.total-score }}
+  category-scores:
+    description: Compact JSON object with category scores keyed by bucket.
+    value: ${{ steps.scorecard-contract.outputs.category-scores }}
+  passed:
+    description: Whether the scorecard scan passed all checks and the min-score gate.
+    value: ${{ steps.scorecard-contract.outputs.passed }}
 
 runs:
   using: composite
@@ -30,20 +45,22 @@ runs:
       with:
         python-version: "3.12"
 
-    - name: Install MCP Trust Kit
+    - name: Install MCP Scorecard
       shell: bash
       working-directory: ${{ github.action_path }}
       run: |
         python -m pip install --upgrade pip
         python -m pip install .
 
-    - name: Run MCP Trust Kit scan
+    - name: Run MCP Scorecard
+      id: run-scorecard
+      continue-on-error: true
       shell: bash
       env:
-        MCP_TRUST_CMD: ${{ inputs.cmd }}
-        MCP_TRUST_MIN_SCORE: ${{ inputs.min-score }}
-        MCP_TRUST_JSON_OUT: ${{ inputs.json-out }}
-        MCP_TRUST_SARIF_OUT: ${{ inputs.sarif-out }}
+        MCP_SCORECARD_CMD: ${{ inputs.cmd }}
+        MCP_SCORECARD_MIN_SCORE: ${{ inputs.min-score }}
+        MCP_SCORECARD_JSON_OUT: ${{ inputs.json-out }}
+        MCP_SCORECARD_SARIF_OUT: ${{ inputs.sarif-out }}
       run: |
         python - <<'PY'
         import os
@@ -51,7 +68,7 @@ runs:
         import subprocess
         import sys
 
-        raw_cmd = os.environ["MCP_TRUST_CMD"].strip()
+        raw_cmd = os.environ["MCP_SCORECARD_CMD"].strip()
         if not raw_cmd:
             print(
                 "Input 'cmd' is required. Example: cmd: python path/to/server.py",
@@ -66,13 +83,191 @@ runs:
             "mcp_trust.cli",
             "scan",
             "--min-score",
-            os.environ["MCP_TRUST_MIN_SCORE"],
+            os.environ["MCP_SCORECARD_MIN_SCORE"],
             "--json-out",
-            os.environ["MCP_TRUST_JSON_OUT"],
+            os.environ["MCP_SCORECARD_JSON_OUT"],
             "--sarif",
-            os.environ["MCP_TRUST_SARIF_OUT"],
+            os.environ["MCP_SCORECARD_SARIF_OUT"],
             "--cmd",
             *server_cmd,
         ]
         raise SystemExit(subprocess.run(cli_cmd, check=False).returncode)
         PY
+
+    - name: Publish MCP Scorecard Summary
+      id: scorecard-contract
+      if: always()
+      shell: bash
+      env:
+        MCP_SCORECARD_JSON_OUT: ${{ inputs.json-out }}
+        MCP_SCORECARD_SARIF_OUT: ${{ inputs.sarif-out }}
+        MCP_SCORECARD_MARKDOWN_OUT: ${{ inputs.markdown-out }}
+        MCP_SCORECARD_SCAN_OUTCOME: ${{ steps.run-scorecard.outcome }}
+      run: |
+        python - <<'PY'
+        import json
+        import os
+        from pathlib import Path
+
+        json_path = Path(os.environ["MCP_SCORECARD_JSON_OUT"])
+        markdown_path_text = os.environ["MCP_SCORECARD_MARKDOWN_OUT"].strip()
+        markdown_path = None if not markdown_path_text else Path(markdown_path_text)
+        scan_outcome = os.environ["MCP_SCORECARD_SCAN_OUTCOME"]
+        github_output = Path(os.environ["GITHUB_OUTPUT"])
+        github_step_summary_text = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
+        github_step_summary = (
+            None if not github_step_summary_text else Path(github_step_summary_text)
+        )
+
+        def load_report() -> dict[str, object] | None:
+            if not json_path.exists():
+                return None
+            return json.loads(json_path.read_text(encoding="utf-8"))
+
+        def extract_total_score(data: dict[str, object] | None) -> str:
+            if data is None:
+                return ""
+            scorecard = data.get("scorecard")
+            if isinstance(scorecard, dict):
+                total_score = scorecard.get("total_score")
+                if isinstance(total_score, dict):
+                    value = total_score.get("value")
+                    if isinstance(value, int):
+                        return str(value)
+            total_score = data.get("total_score")
+            if isinstance(total_score, int):
+                return str(total_score)
+            score = data.get("score")
+            if isinstance(score, dict):
+                nested_total = score.get("total_score")
+                if isinstance(nested_total, int):
+                    return str(nested_total)
+            return ""
+
+        def extract_category_scores(data: dict[str, object] | None) -> dict[str, object]:
+            if data is None:
+                return {}
+            scorecard = data.get("scorecard")
+            if isinstance(scorecard, dict):
+                category_scores = scorecard.get("category_scores")
+                if isinstance(category_scores, dict):
+                    return category_scores
+            score = data.get("score")
+            if isinstance(score, dict):
+                category_scores = score.get("category_scores")
+                if isinstance(category_scores, dict):
+                    return category_scores
+            return {}
+
+        def extract_why_this_score(data: dict[str, object] | None) -> str:
+            if data is None:
+                return "Scorecard report was not produced."
+            scorecard = data.get("scorecard")
+            if isinstance(scorecard, dict):
+                why_this_score = scorecard.get("why_this_score")
+                if isinstance(why_this_score, str):
+                    return why_this_score
+            summary = data.get("summary")
+            if isinstance(summary, dict):
+                why_score = summary.get("why_score")
+                if isinstance(why_score, str):
+                    return why_score
+            return "Why this score is unavailable."
+
+        def extract_target(data: dict[str, object] | None) -> str:
+            if data is None:
+                return "Target unavailable"
+            scan = data.get("scan")
+            if isinstance(scan, dict):
+                target = scan.get("target")
+                if isinstance(target, dict):
+                    raw = target.get("raw")
+                    if isinstance(raw, str):
+                        return raw
+            target = data.get("target")
+            if isinstance(target, str):
+                return target
+            server = data.get("server")
+            if isinstance(server, dict):
+                server_target = server.get("target")
+                if isinstance(server_target, str):
+                    return server_target
+            return "Target unavailable"
+
+        def build_markdown(
+            total_score: str,
+            category_scores: dict[str, object],
+            why_this_score: str,
+            target: str,
+            passed: bool,
+        ) -> str:
+            result = "pass" if passed else "fail"
+            lines = [
+                "## MCP Scorecard",
+                "",
+                f"- Result: `{result}`",
+                f"- Total score: `{total_score or 'n/a'}`",
+                f"- Target: `{target}`",
+                f"- Why this score: {why_this_score}",
+                f"- JSON report: `{json_path}`",
+                f"- SARIF report: `{os.environ['MCP_SCORECARD_SARIF_OUT']}`",
+                "",
+                "### Category Scores",
+                "",
+                "| Bucket | Score | Findings | Penalties |",
+                "| --- | --- | --- | --- |",
+            ]
+
+            for bucket, bucket_score in category_scores.items():
+                if not isinstance(bucket_score, dict):
+                    continue
+                score_value = bucket_score.get("score", "n/a")
+                max_score = bucket_score.get("max_score", "n/a")
+                finding_count = bucket_score.get("finding_count", "n/a")
+                penalty_points = bucket_score.get("penalty_points", "n/a")
+                lines.append(
+                    f"| `{bucket}` | `{score_value}/{max_score}` | "
+                    f"`{finding_count}` | `{penalty_points}` |"
+                )
+
+            return "\n".join(lines) + "\n"
+
+        data = load_report()
+        total_score = extract_total_score(data)
+        category_scores = extract_category_scores(data)
+        why_this_score = extract_why_this_score(data)
+        target = extract_target(data)
+        passed = scan_outcome == "success"
+        markdown = build_markdown(
+            total_score=total_score,
+            category_scores=category_scores,
+            why_this_score=why_this_score,
+            target=target,
+            passed=passed,
+        )
+        if markdown_path is not None:
+            markdown += f"\nSaved Markdown summary: `{markdown_path}`\n"
+
+        with github_output.open("a", encoding="utf-8") as handle:
+            handle.write(f"total-score={total_score}\n")
+            handle.write(
+                "category-scores="
+                f"{json.dumps(category_scores, sort_keys=True, separators=(',', ':'))}\n"
+            )
+            handle.write(f"passed={'true' if passed else 'false'}\n")
+
+        if markdown_path is not None:
+            markdown_path.parent.mkdir(parents=True, exist_ok=True)
+            markdown_path.write_text(markdown, encoding="utf-8")
+
+        if github_step_summary is not None:
+            with github_step_summary.open("a", encoding="utf-8") as handle:
+                handle.write(markdown)
+        PY
+
+    - name: Enforce MCP Scorecard Result
+      if: ${{ steps.run-scorecard.outcome != 'success' }}
+      shell: bash
+      run: |
+        echo "MCP Scorecard failed. See the action logs, JSON report, and step summary for details." >&2
+        exit 1

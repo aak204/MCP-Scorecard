@@ -19,11 +19,11 @@ class DummyRule(Rule):
         super().__init__(
             rule_id=rule_id,
             title=f"Title for {rule_id}",
-            summary=f"Summary for {rule_id}",
+            rationale=f"Rationale for {rule_id}",
             severity=FindingLevel.INFO,
             category=FindingCategory.TOOL_DESCRIPTION,
             risk_category=RiskCategory.METADATA_HYGIENE,
-            score_category=ScoreCategory.TOOL_SURFACE,
+            bucket=ScoreCategory.METADATA,
         )
 
     def evaluate(self, server: NormalizedServer) -> list[Finding]:

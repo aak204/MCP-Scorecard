@@ -39,11 +39,11 @@ class DangerousHttpRequestToolRule(Rule):
 
     rule_id: str = "dangerous_http_request_tool"
     title: str = "Dangerous HTTP request tool"
-    summary: str = "Tools that issue arbitrary HTTP requests are high risk."
+    rationale: str = "Tools that issue arbitrary HTTP requests are high risk."
     severity: FindingLevel = FindingLevel.ERROR
     category: FindingCategory = FindingCategory.CAPABILITY
     risk_category: RiskCategory = RiskCategory.NETWORK
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.SECURITY
     tags: tuple[str, ...] = ("capability", "network", "http")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

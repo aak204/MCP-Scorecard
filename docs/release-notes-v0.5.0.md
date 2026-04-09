@@ -1,10 +1,12 @@
-# MCP Trust Kit v0.5.0
+# MCP Scorecard v0.5.0
+
+Historical `v0.5.0` release of the project now presented as `MCP Scorecard`.
 
 `v0.5.0` is a narrow integration-driven release.
 
 The scanner contract from `v0.4.0` stays intentionally stable: local `stdio` discovery,
 deterministic rules, predictable scoring, terminal summary, JSON, SARIF, and GitHub Actions.
-The main reason for `v0.5.0` is to make Layer 1 baseline output easier to consume by downstream
+The main reason for `v0.5.0` is to make CI-first scorecard output easier to consume by downstream
 systems that care about scan freshness and temporal decay.
 
 ## Highlights
@@ -12,7 +14,7 @@ systems that care about scan freshness and temporal decay.
 - explicit `scan_timestamp` field in JSON output
 - matching timestamp metadata in SARIF
 - no break to existing `generated_at` consumers
-- release-ready static baseline contract for higher-layer integrations
+- release-ready deterministic scorecard contract for higher-layer integrations
 
 ## Included In v0.5.0
 
@@ -54,11 +56,11 @@ mcp-trust scan --json-out baseline.json --cmd python examples/insecure-server/se
 GitHub Actions:
 
 ```yaml
-- name: Run MCP Trust Kit
+- name: Run MCP Scorecard
   uses: aak204/MCP-Trust-Kit@v0.5.0
   with:
     cmd: python path/to/your/server.py
     min-score: "80"
-    json-out: mcp-trust-report.json
-    sarif-out: mcp-trust-report.sarif
+    json-out: mcp-scorecard-report.json
+    sarif-out: mcp-scorecard-report.sarif
 ```

@@ -1,4 +1,4 @@
-"""Default deterministic ruleset for MCP Trust Kit v0."""
+"""Default deterministic ruleset for MCP Scorecard v0."""
 
 from __future__ import annotations
 
@@ -47,5 +47,5 @@ RULES_V0 = (
 
 
 def build_v0_rule_registry() -> RuleRegistry:
-    """Return the default ordered ruleset for MCP Trust Kit v0."""
+    """Return the default ordered ruleset for MCP Scorecard v0."""
     return RuleRegistry.from_rules(RULES_V0)

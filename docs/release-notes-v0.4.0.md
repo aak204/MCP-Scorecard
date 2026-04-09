@@ -1,6 +1,8 @@
-# MCP Trust Kit v0.4.0
+# MCP Scorecard v0.4.0
 
-`v0.4.0` is the first practically useful public release of `MCP Trust Kit`.
+Historical `v0.4.0` release of the project now presented as `MCP Scorecard`.
+
+`v0.4.0` is the first practically useful public release in the current scorecard direction.
 
 This release keeps the product intentionally narrow: local `stdio` MCP discovery, deterministic
 rules, predictable scoring, terminal summary, JSON, SARIF, and GitHub Actions. The main change is
@@ -9,7 +11,7 @@ review signal and less like a demo number.
 
 ## Highlights
 
-- deterministic surface-risk scoring for MCP servers
+- deterministic quality scoring for MCP servers
 - refined schema heuristics that stop penalizing empty object schemas for no-arg tools by default
 - expanded rules for schema hygiene and risky exposed capabilities
 - capability-aware report summaries
@@ -41,7 +43,7 @@ review signal and less like a demo number.
 
 The key interpretation stays the same:
 
-- low score means higher exposed surface risk, not malicious intent
+- low score means more deterministic findings or higher-risk exposed surface, not malicious intent
 - high score means fewer deterministic findings, not a guarantee of safety
 
 ## Quickstart
@@ -58,11 +60,11 @@ mcp-trust scan --cmd python examples/insecure-server/server.py
 GitHub Actions:
 
 ```yaml
-- name: Run MCP Trust Kit
+- name: Run MCP Scorecard
   uses: aak204/MCP-Trust-Kit@v0.4.0
   with:
     cmd: python path/to/your/server.py
     min-score: "80"
-    json-out: mcp-trust-report.json
-    sarif-out: mcp-trust-report.sarif
+    json-out: mcp-scorecard-report.json
+    sarif-out: mcp-scorecard-report.sarif
 ```

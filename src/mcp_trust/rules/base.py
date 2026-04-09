@@ -1,4 +1,4 @@
-"""Base abstractions for deterministic trust scoring rules."""
+"""Base abstractions for deterministic scorecard checks."""
 
 from __future__ import annotations
 
@@ -30,11 +30,11 @@ class Rule(ABC):
 
     rule_id: str
     title: str
-    summary: str
+    rationale: str
     severity: FindingLevel
     category: FindingCategory
     risk_category: RiskCategory
-    score_category: ScoreCategory
+    bucket: ScoreCategory
     tags: tuple[str, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
@@ -42,10 +42,20 @@ class Rule(ABC):
             raise ValueError("rule_id must not be empty.")
         if not self.title.strip():
             raise ValueError("rule title must not be empty.")
-        if not self.summary.strip():
-            raise ValueError("rule summary must not be empty.")
+        if not self.rationale.strip():
+            raise ValueError("rule rationale must not be empty.")
         normalized_tags = tuple(tag.strip() for tag in self.tags if tag.strip())
         object.__setattr__(self, "tags", normalized_tags)
+
+    @property
+    def summary(self) -> str:
+        """Compatibility alias for the rule rationale."""
+        return self.rationale
+
+    @property
+    def score_category(self) -> ScoreCategory:
+        """Compatibility alias for the score bucket."""
+        return self.bucket
 
     @property
     def score_impact(self) -> int:
@@ -56,12 +66,12 @@ class Rule(ABC):
         """Return stable metadata for report serialization layers."""
         return RuleDescriptor(
             rule_id=self.rule_id,
-            name=self.title,
-            summary=self.summary,
+            title=self.title,
+            rationale=self.rationale,
             severity=self.severity,
             category=self.category,
             risk_category=self.risk_category,
-            score_category=self.score_category,
+            bucket=self.bucket,
             score_impact=self.score_impact,
             tags=self.tags,
         )
@@ -85,7 +95,7 @@ class Rule(ABC):
             title=self.title,
             category=self.category,
             risk_category=self.risk_category,
-            score_category=self.score_category,
+            bucket=self.bucket,
             message=message,
             evidence=tuple(evidence),
             penalty=self.score_impact,

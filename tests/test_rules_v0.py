@@ -84,21 +84,24 @@ def test_metadata_rules_emit_expected_findings() -> None:
     assert len(duplicate_finding) == 1
     assert duplicate_finding[0].severity is FindingLevel.ERROR
     assert duplicate_finding[0].category is FindingCategory.TOOL_IDENTITY
-    assert duplicate_finding[0].score_category is ScoreCategory.SPEC
+    assert duplicate_finding[0].bucket is ScoreCategory.CONFORMANCE
     assert duplicate_finding[0].risk_category is RiskCategory.METADATA_HYGIENE
 
     assert len(missing_description_finding) == 1
     assert missing_description_finding[0].severity is FindingLevel.WARNING
     assert missing_description_finding[0].category is FindingCategory.TOOL_DESCRIPTION
+    assert missing_description_finding[0].bucket is ScoreCategory.METADATA
     assert "description=<missing>" in missing_description_finding[0].evidence
 
     assert [finding.tool_name for finding in generic_name_findings] == ["do_it", "do_it"]
+    assert all(finding.bucket is ScoreCategory.ERGONOMICS for finding in generic_name_findings)
     assert all(
         finding.risk_category is RiskCategory.METADATA_HYGIENE
         for finding in generic_name_findings
     )
 
     assert [finding.tool_name for finding in vague_findings] == ["do_it"]
+    assert vague_findings[0].bucket is ScoreCategory.ERGONOMICS
     assert vague_findings[0].evidence == (
         "description='Helps with stuff.'",
         "word_count=3",
@@ -151,12 +154,16 @@ def test_schema_rules_emit_expected_findings_and_skip_no_arg_empty_object_tools(
     missing_required_findings = MissingRequiredForCriticalFieldsRule().evaluate(server)
 
     assert [finding.tool_name for finding in schema_type_findings] == ["submit_request"]
+    assert schema_type_findings[0].bucket is ScoreCategory.CONFORMANCE
     assert [finding.tool_name for finding in schema_open_findings] == ["debug_payload"]
+    assert schema_open_findings[0].bucket is ScoreCategory.CONFORMANCE
     assert [finding.tool_name for finding in weak_schema_findings] == ["debug_payload"]
+    assert weak_schema_findings[0].bucket is ScoreCategory.ERGONOMICS
     assert weak_schema_findings[0].evidence == (
         "matched_heuristic=inputful_tool_with_empty_object_schema",
     )
     assert [finding.tool_name for finding in missing_required_findings] == ["fetch_url"]
+    assert missing_required_findings[0].bucket is ScoreCategory.CONFORMANCE
     assert missing_required_findings[0].evidence == (
         "critical_fields=['url']",
         "required_fields=[]",
@@ -255,21 +262,29 @@ def test_capability_rules_emit_expected_findings() -> None:
 
     assert [finding.tool_name for finding in exec_findings] == ["exec_command", "download_exec"]
     assert exec_findings[0].risk_category is RiskCategory.COMMAND_EXECUTION
+    assert exec_findings[0].bucket is ScoreCategory.SECURITY
     assert "input_keys=['command']" in exec_findings[0].evidence
 
     assert [finding.tool_name for finding in fs_findings] == ["write_file"]
     assert fs_findings[0].risk_category is RiskCategory.FILE_SYSTEM
+    assert fs_findings[0].bucket is ScoreCategory.SECURITY
     assert "path_keys=['path']" in fs_findings[0].evidence
 
     assert [finding.tool_name for finding in fs_delete_findings] == ["delete_file"]
     assert fs_delete_findings[0].severity is FindingLevel.ERROR
+    assert fs_delete_findings[0].bucket is ScoreCategory.SECURITY
 
     assert [finding.tool_name for finding in http_findings] == ["http_fetch", "download_exec"]
+    assert all(finding.bucket is ScoreCategory.SECURITY for finding in http_findings)
     assert [finding.tool_name for finding in network_findings] == ["connect_socket"]
+    assert network_findings[0].bucket is ScoreCategory.SECURITY
     assert [finding.tool_name for finding in download_exec_findings] == ["download_exec"]
+    assert download_exec_findings[0].bucket is ScoreCategory.SECURITY
 
     assert [finding.tool_name for finding in scope_findings] == ["write_file", "delete_file"]
+    assert all(finding.bucket is ScoreCategory.ERGONOMICS for finding in scope_findings)
     assert [finding.tool_name for finding in destructive_description_findings] == ["delete_file"]
+    assert destructive_description_findings[0].bucket is ScoreCategory.METADATA
 
 
 def test_fs_delete_rule_avoids_rm_substring_false_positives() -> None:
@@ -320,7 +335,9 @@ def test_v0_ruleset_finds_expected_issues_on_insecure_server() -> None:
     )
     assert report.score.penalty_points == 90
     assert report.score.final_score == 10
-    assert report.score.category_breakdown[ScoreCategory.SPEC].score == 60
-    assert report.score.category_breakdown[ScoreCategory.TOOL_SURFACE].score == 50
+    assert report.score.category_breakdown[ScoreCategory.CONFORMANCE].score == 90
+    assert report.score.category_breakdown[ScoreCategory.SECURITY].score == 60
+    assert report.score.category_breakdown[ScoreCategory.ERGONOMICS].score == 60
+    assert report.score.category_breakdown[ScoreCategory.METADATA].score == 100
     assert all(finding.title is not None for finding in report.findings)
     assert all(finding.evidence for finding in report.findings)

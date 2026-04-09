@@ -32,11 +32,11 @@ class DangerousShellDownloadExecRule(Rule):
 
     rule_id: str = "dangerous_shell_download_exec"
     title: str = "Dangerous download-and-execute tool"
-    summary: str = "Tools that combine remote download with shell execution are high risk."
+    rationale: str = "Tools that combine remote download with shell execution are high risk."
     severity: FindingLevel = FindingLevel.ERROR
     category: FindingCategory = FindingCategory.CAPABILITY
     risk_category: RiskCategory = RiskCategory.COMMAND_EXECUTION
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.SECURITY
     tags: tuple[str, ...] = ("capability", "execution", "network")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

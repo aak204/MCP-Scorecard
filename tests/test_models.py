@@ -43,18 +43,21 @@ def test_score_breakdown_aggregates_rule_penalties_and_clamps_to_zero() -> None:
             rule_id="rule.alpha",
             level=FindingLevel.WARNING,
             message="Alpha finding.",
+            bucket=ScoreCategory.SECURITY,
             penalty=15,
         ),
         Finding(
             rule_id="rule.alpha",
             level=FindingLevel.INFO,
             message="Alpha informational finding.",
+            bucket=ScoreCategory.SECURITY,
             penalty=5,
         ),
         Finding(
             rule_id="rule.beta",
             level=FindingLevel.ERROR,
             message="Beta finding.",
+            bucket=ScoreCategory.SECURITY,
             penalty=95,
         ),
     )
@@ -64,9 +67,9 @@ def test_score_breakdown_aggregates_rule_penalties_and_clamps_to_zero() -> None:
     assert breakdown.penalty_points == 115
     assert breakdown.final_score == 0
     assert breakdown.rule_penalties == {"rule.alpha": 20, "rule.beta": 95}
-    assert breakdown.category_breakdown[ScoreCategory.TOOL_SURFACE].penalty_points == 115
-    assert breakdown.category_breakdown[ScoreCategory.TOOL_SURFACE].score == 0
-    assert breakdown.category_breakdown[ScoreCategory.SPEC].score == 100
+    assert breakdown.category_breakdown[ScoreCategory.SECURITY].penalty_points == 115
+    assert breakdown.category_breakdown[ScoreCategory.SECURITY].score == 0
+    assert breakdown.category_breakdown[ScoreCategory.CONFORMANCE].score == 100
 
 
 def test_report_requires_timezone_aware_timestamp() -> None:

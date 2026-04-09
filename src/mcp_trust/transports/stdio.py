@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from queue import Empty, Queue
 from typing import TextIO, cast
 
-from mcp_trust import __version__
+from mcp_trust import __package_name__, __version__
 from mcp_trust.models import JSONValue, NormalizedServer, NormalizedTool
 from mcp_trust.transport import (
     ProtocolError,
@@ -159,7 +159,7 @@ class _StdioSession:
                 "protocolVersion": self._protocol_version,
                 "capabilities": {},
                 "clientInfo": {
-                    "name": "mcp-trust-kit",
+                    "name": __package_name__,
                     "version": __version__,
                 },
             },

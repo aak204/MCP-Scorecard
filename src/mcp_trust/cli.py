@@ -1,20 +1,20 @@
-"""Command-line interface for MCP Trust Kit."""
+"""Command-line interface for the MCP Scorecard project."""
 
 from __future__ import annotations
 
 import argparse
 from collections.abc import Sequence
 
-from mcp_trust import __version__
+from mcp_trust import __tool_name__, __version__
 from mcp_trust.commands import add_scan_parser, run_scan_command
 
 
 def build_parser() -> argparse.ArgumentParser:
     """Build the top-level CLI parser."""
     parser = argparse.ArgumentParser(
-        prog="mcp-trust",
-        description="Deterministic surface-risk scoring for MCP servers.",
-        epilog="Use 'mcp-trust scan --help' for scan command options.",
+        prog=__tool_name__,
+        description="Deterministic CI-first quality scorecard for MCP servers.",
+        epilog=f"Use '{__tool_name__} scan --help' for scan command options.",
     )
     parser.add_argument(
         "--version",

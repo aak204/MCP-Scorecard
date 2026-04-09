@@ -29,11 +29,11 @@ class WeakInputSchemaRule(Rule):
 
     rule_id: str = "weak_input_schema"
     title: str = "Weak input schema"
-    summary: str = "Tool input schemas should constrain free-form payloads clearly."
+    rationale: str = "Tool input schemas should constrain free-form payloads clearly."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.INPUT_SCHEMA
     risk_category: RiskCategory = RiskCategory.SCHEMA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.ERGONOMICS
     tags: tuple[str, ...] = ("schema", "validation")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

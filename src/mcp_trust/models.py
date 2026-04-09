@@ -59,12 +59,12 @@ class RiskCategory(StrEnum):
 
 
 class ScoreCategory(StrEnum):
-    """Top-level scoring buckets exposed to users."""
+    """Top-level score buckets exposed to users."""
 
-    SPEC = "spec"
-    AUTH = "auth"
-    SECRETS = "secrets"
-    TOOL_SURFACE = "tool_surface"
+    CONFORMANCE = "conformance"
+    SECURITY = "security"
+    ERGONOMICS = "ergonomics"
+    METADATA = "metadata"
 
 
 @dataclass(slots=True, frozen=True)
@@ -124,7 +124,7 @@ class Finding:
     title: str | None = None
     category: FindingCategory | None = None
     risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.METADATA
     evidence: tuple[str, ...] = field(default_factory=tuple)
     penalty: int = 0
     tool_name: str | None = None
@@ -158,6 +158,11 @@ class Finding:
         return self.level
 
     @property
+    def score_category(self) -> ScoreCategory:
+        """Compatibility alias for the score bucket."""
+        return self.bucket
+
+    @property
     def score_impact(self) -> int:
         """Return the score impact associated with the finding."""
         return self.penalty
@@ -165,15 +170,15 @@ class Finding:
 
 @dataclass(slots=True, frozen=True)
 class RuleDescriptor:
-    """Stable rule metadata attached to a computed report."""
+    """Stable check metadata attached to a computed report."""
 
     rule_id: str
-    name: str
-    summary: str
+    title: str
+    rationale: str
     severity: FindingLevel
     category: FindingCategory
     risk_category: RiskCategory
-    score_category: ScoreCategory
+    bucket: ScoreCategory
     score_impact: int
     tags: tuple[str, ...] = field(default_factory=tuple)
 
@@ -185,19 +190,39 @@ class RuleDescriptor:
         )
         object.__setattr__(
             self,
-            "name",
-            _normalize_required_text(self.name, field_name="rule name"),
+            "title",
+            _normalize_required_text(self.title, field_name="rule title"),
         )
         object.__setattr__(
             self,
-            "summary",
-            _normalize_required_text(self.summary, field_name="rule summary"),
+            "rationale",
+            _normalize_required_text(self.rationale, field_name="rule rationale"),
         )
         if self.score_impact < 0:
             raise ValueError("rule score_impact must be greater than or equal to zero.")
 
         tags = tuple(_normalize_required_text(tag, field_name="rule tag") for tag in self.tags)
         object.__setattr__(self, "tags", tags)
+
+    @property
+    def id(self) -> str:
+        """Return the canonical check identifier."""
+        return self.rule_id
+
+    @property
+    def name(self) -> str:
+        """Compatibility alias for the check title."""
+        return self.title
+
+    @property
+    def summary(self) -> str:
+        """Compatibility alias for the check rationale."""
+        return self.rationale
+
+    @property
+    def score_category(self) -> ScoreCategory:
+        """Compatibility alias for the score bucket."""
+        return self.bucket
 
 
 @dataclass(slots=True, frozen=True)
@@ -237,7 +262,7 @@ class CategoryScoreBreakdown:
 
 @dataclass(slots=True, frozen=True)
 class ScoreBreakdown:
-    """Aggregated trust score information for a report."""
+    """Aggregated score information for a report."""
 
     max_score: int
     total_penalty_points: int
@@ -316,10 +341,10 @@ class ScoreBreakdown:
             rule_penalties[finding.rule_id] = (
                 rule_penalties.get(finding.rule_id, 0) + finding.penalty
             )
-            category_penalties[finding.score_category] += finding.penalty
-            category_finding_counts[finding.score_category] += 1
-            category_rule_penalties[finding.score_category][finding.rule_id] = (
-                category_rule_penalties[finding.score_category].get(finding.rule_id, 0)
+            category_penalties[finding.bucket] += finding.penalty
+            category_finding_counts[finding.bucket] += 1
+            category_rule_penalties[finding.bucket][finding.rule_id] = (
+                category_rule_penalties[finding.bucket].get(finding.rule_id, 0)
                 + finding.penalty
             )
 
@@ -355,7 +380,7 @@ class Report:
     score: ScoreBreakdown
     rule_descriptors: dict[str, RuleDescriptor] = field(default_factory=dict)
     generated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
-    schema_version: str = "0.5"
+    schema_version: str = "1.0"
     toolkit_version: str = __version__
     metadata: dict[str, JSONValue] = field(default_factory=dict)
 

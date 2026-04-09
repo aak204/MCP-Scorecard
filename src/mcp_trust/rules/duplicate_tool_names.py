@@ -22,11 +22,11 @@ class DuplicateToolNamesRule(Rule):
 
     rule_id: str = "duplicate_tool_names"
     title: str = "Duplicate tool names"
-    summary: str = "Tool names should be unique within one MCP server."
+    rationale: str = "Tool names should be unique within one MCP server."
     severity: FindingLevel = FindingLevel.ERROR
     category: FindingCategory = FindingCategory.TOOL_IDENTITY
     risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.CONFORMANCE
     tags: tuple[str, ...] = ("tools", "identity")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

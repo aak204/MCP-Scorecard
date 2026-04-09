@@ -33,11 +33,11 @@ class WriteToolWithoutScopeHintRule(Rule):
 
     rule_id: str = "write_tool_without_scope_hint"
     title: str = "Write tool without scope hint"
-    summary: str = "Filesystem mutation tools should document scope constraints clearly."
+    rationale: str = "Filesystem mutation tools should document scope constraints clearly."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.CAPABILITY
     risk_category: RiskCategory = RiskCategory.EXTERNAL_SIDE_EFFECTS
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.ERGONOMICS
     tags: tuple[str, ...] = ("capability", "filesystem", "scope")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

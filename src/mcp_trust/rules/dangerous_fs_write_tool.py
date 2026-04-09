@@ -32,11 +32,11 @@ class DangerousFsWriteToolRule(Rule):
 
     rule_id: str = "dangerous_fs_write_tool"
     title: str = "Dangerous filesystem write tool"
-    summary: str = "Tools that write files on disk are high risk."
+    rationale: str = "Tools that write files on disk are high risk."
     severity: FindingLevel = FindingLevel.ERROR
     category: FindingCategory = FindingCategory.CAPABILITY
     risk_category: RiskCategory = RiskCategory.FILE_SYSTEM
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.SECURITY
     tags: tuple[str, ...] = ("capability", "filesystem")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

@@ -35,11 +35,11 @@ class OverlyGenericToolNameRule(Rule):
 
     rule_id: str = "overly_generic_tool_name"
     title: str = "Overly generic tool name"
-    summary: str = "Tool names should communicate behavior clearly."
+    rationale: str = "Tool names should communicate behavior clearly."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.TOOL_IDENTITY
     risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.ERGONOMICS
     tags: tuple[str, ...] = ("tools", "identity")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

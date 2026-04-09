@@ -4,7 +4,7 @@ This example is a tiny deterministic MCP server that intentionally exposes risky
 
 It exists for:
 
-- local manual checks with `mcp-trust scan`
+- local manual checks with `mcp-scorecard scan`
 - future README screenshots and examples
 - stable scanner tests that should always produce the same findings
 
@@ -25,10 +25,10 @@ From the repository root:
 python examples/insecure-server/server.py
 ```
 
-Scan it with MCP Trust Kit:
+Scan it with MCP Scorecard:
 
 ```bash
-mcp-trust scan --cmd python examples/insecure-server/server.py
+mcp-scorecard scan --cmd python examples/insecure-server/server.py
 ```
 
 With the local virtual environment:
@@ -37,14 +37,14 @@ With the local virtual environment:
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
-mcp-trust scan --cmd python examples/insecure-server/server.py
+mcp-scorecard scan --cmd python examples/insecure-server/server.py
 ```
 
 <details>
 <summary>Windows (PowerShell)</summary>
 
 ```powershell
-.\.venv\Scripts\mcp-trust scan --cmd .\.venv\Scripts\python examples\insecure-server\server.py
+.\.venv\Scripts\mcp-scorecard scan --cmd .\.venv\Scripts\python examples\insecure-server\server.py
 ```
 
 </details>

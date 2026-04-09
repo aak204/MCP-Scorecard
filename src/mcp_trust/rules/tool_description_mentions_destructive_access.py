@@ -31,11 +31,11 @@ class ToolDescriptionMentionsDestructiveAccessRule(Rule):
 
     rule_id: str = "tool_description_mentions_destructive_access"
     title: str = "Description mentions destructive access"
-    summary: str = "Tool descriptions should make destructive broad-scope access easy to spot."
+    rationale: str = "Tool descriptions should make destructive broad-scope access easy to spot."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.CAPABILITY
     risk_category: RiskCategory = RiskCategory.EXTERNAL_SIDE_EFFECTS
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.METADATA
     tags: tuple[str, ...] = ("tools", "description", "destructive")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

@@ -5,8 +5,8 @@
     {
       "tool": {
         "driver": {
-          "name": "MCP Trust Kit",
-          "semanticVersion": "0.5.0",
+          "name": "MCP Scorecard",
+          "semanticVersion": "1.0.0",
           "rules": [
             {
               "id": "duplicate_tool_names",
@@ -29,12 +29,12 @@
                   "identity",
                   "tool-identity",
                   "metadata_hygiene",
-                  "spec"
+                  "conformance"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "metadata_hygiene",
-                "score_category": "spec",
+                "bucket": "conformance",
                 "score_impact": 20
               }
             },
@@ -59,12 +59,12 @@
                   "description",
                   "tool-description",
                   "metadata_hygiene",
-                  "spec"
+                  "metadata"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "metadata_hygiene",
-                "score_category": "spec",
+                "bucket": "metadata",
                 "score_impact": 10
               }
             },
@@ -89,12 +89,12 @@
                   "identity",
                   "tool-identity",
                   "metadata_hygiene",
-                  "spec"
+                  "ergonomics"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "metadata_hygiene",
-                "score_category": "spec",
+                "bucket": "ergonomics",
                 "score_impact": 10
               }
             },
@@ -119,12 +119,12 @@
                   "description",
                   "tool-description",
                   "metadata_hygiene",
-                  "spec"
+                  "ergonomics"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "metadata_hygiene",
-                "score_category": "spec",
+                "bucket": "ergonomics",
                 "score_impact": 10
               }
             },
@@ -149,12 +149,12 @@
                   "validation",
                   "input-schema",
                   "schema_hygiene",
-                  "spec"
+                  "conformance"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "schema_hygiene",
-                "score_category": "spec",
+                "bucket": "conformance",
                 "score_impact": 10
               }
             },
@@ -179,12 +179,12 @@
                   "validation",
                   "input-schema",
                   "schema_hygiene",
-                  "spec"
+                  "conformance"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "schema_hygiene",
-                "score_category": "spec",
+                "bucket": "conformance",
                 "score_impact": 10
               }
             },
@@ -209,12 +209,12 @@
                   "validation",
                   "input-schema",
                   "schema_hygiene",
-                  "spec"
+                  "ergonomics"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "schema_hygiene",
-                "score_category": "spec",
+                "bucket": "ergonomics",
                 "score_impact": 10
               }
             },
@@ -239,12 +239,12 @@
                   "validation",
                   "input-schema",
                   "schema_hygiene",
-                  "spec"
+                  "conformance"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "schema_hygiene",
-                "score_category": "spec",
+                "bucket": "conformance",
                 "score_impact": 10
               }
             },
@@ -268,12 +268,12 @@
                   "capability",
                   "execution",
                   "command_execution",
-                  "tool_surface"
+                  "security"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "command_execution",
-                "score_category": "tool_surface",
+                "bucket": "security",
                 "score_impact": 20
               }
             },
@@ -298,12 +298,12 @@
                   "execution",
                   "network",
                   "command_execution",
-                  "tool_surface"
+                  "security"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "command_execution",
-                "score_category": "tool_surface",
+                "bucket": "security",
                 "score_impact": 20
               }
             },
@@ -327,12 +327,12 @@
                   "capability",
                   "filesystem",
                   "file_system",
-                  "tool_surface"
+                  "security"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "file_system",
-                "score_category": "tool_surface",
+                "bucket": "security",
                 "score_impact": 20
               }
             },
@@ -357,12 +357,12 @@
                   "filesystem",
                   "destructive",
                   "file_system",
-                  "tool_surface"
+                  "security"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "file_system",
-                "score_category": "tool_surface",
+                "bucket": "security",
                 "score_impact": 20
               }
             },
@@ -386,12 +386,12 @@
                   "capability",
                   "network",
                   "http",
-                  "tool_surface"
+                  "security"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "network",
-                "score_category": "tool_surface",
+                "bucket": "security",
                 "score_impact": 20
               }
             },
@@ -414,12 +414,12 @@
                 "tags": [
                   "capability",
                   "network",
-                  "tool_surface"
+                  "security"
                 ],
                 "precision": "medium",
                 "problem.severity": "error",
                 "risk_category": "network",
-                "score_category": "tool_surface",
+                "bucket": "security",
                 "score_impact": 20
               }
             },
@@ -444,12 +444,12 @@
                   "filesystem",
                   "scope",
                   "external_side_effects",
-                  "tool_surface"
+                  "ergonomics"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "external_side_effects",
-                "score_category": "tool_surface",
+                "bucket": "ergonomics",
                 "score_impact": 10
               }
             },
@@ -475,12 +475,12 @@
                   "destructive",
                   "capability",
                   "external_side_effects",
-                  "tool_surface"
+                  "metadata"
                 ],
                 "precision": "medium",
                 "problem.severity": "warning",
                 "risk_category": "external_side_effects",
-                "score_category": "tool_surface",
+                "bucket": "metadata",
                 "score_impact": 10
               }
             }
@@ -490,14 +490,50 @@
       "invocations": [
         {
           "executionSuccessful": true,
-          "endTimeUtc": "2026-03-31T07:26:34.700338+00:00",
+          "endTimeUtc": "2026-04-09T16:08:35.505980+00:00",
           "workingDirectory": {
             "uri": "file:///D:/Dev/MCP%20Trust%20Kit"
           }
         }
       ],
       "properties": {
-        "scan_timestamp": "2026-03-31T07:26:34.700338+00:00"
+        "product_name": "MCP Scorecard",
+        "tool_name": "mcp-scorecard",
+        "report_schema_id": "mcp-scorecard-report",
+        "report_schema_version": "1.0",
+        "scan_timestamp": "2026-04-09T16:08:35.505980+00:00",
+        "total_score": 10,
+        "category_scores": {
+          "conformance": {
+            "score": 90,
+            "max_score": 100,
+            "penalty_points": 10,
+            "finding_count": 1
+          },
+          "security": {
+            "score": 60,
+            "max_score": 100,
+            "penalty_points": 40,
+            "finding_count": 2
+          },
+          "ergonomics": {
+            "score": 60,
+            "max_score": 100,
+            "penalty_points": 40,
+            "finding_count": 4
+          },
+          "metadata": {
+            "score": 100,
+            "max_score": 100,
+            "penalty_points": 0,
+            "finding_count": 0
+          }
+        },
+        "why_this_score": "Score is driven mainly by security findings in command execution and file system and ergonomics findings.",
+        "limitations": [
+          "Low score means more deterministic findings or higher-risk exposed surface, not malicious intent.",
+          "High score means fewer deterministic findings, not a guarantee of safety."
+        ]
       },
       "results": [
         {
@@ -512,13 +548,15 @@
           },
           "properties": {
             "risk_category": "metadata_hygiene",
-            "score_category": "spec",
+            "bucket": "ergonomics",
             "score_impact": 10,
             "tool_name": "do_it",
             "finding_category": "tool-identity",
             "evidence": [
               "tool_name='do_it'"
-            ]
+            ],
+            "check_title": "Overly generic tool name",
+            "check_rationale": "Tool names should communicate behavior clearly."
           },
           "locations": [
             {
@@ -551,7 +589,7 @@
           },
           "properties": {
             "risk_category": "metadata_hygiene",
-            "score_category": "spec",
+            "bucket": "ergonomics",
             "score_impact": 10,
             "tool_name": "do_it",
             "finding_category": "tool-description",
@@ -559,7 +597,9 @@
               "description='Helps with stuff.'",
               "word_count=3",
               "matched_phrase='helps with stuff'"
-            ]
+            ],
+            "check_title": "Vague tool description",
+            "check_rationale": "Tool descriptions should clearly explain what the tool does."
           },
           "locations": [
             {
@@ -592,14 +632,16 @@
           },
           "properties": {
             "risk_category": "schema_hygiene",
-            "score_category": "spec",
+            "bucket": "conformance",
             "score_impact": 10,
             "tool_name": "debug_payload",
             "finding_category": "input-schema",
             "evidence": [
               "additionalProperties=True",
               "property_count=0"
-            ]
+            ],
+            "check_title": "Schema allows arbitrary properties",
+            "check_rationale": "Tool input schemas should not allow arbitrary top-level properties."
           },
           "locations": [
             {
@@ -632,13 +674,15 @@
           },
           "properties": {
             "risk_category": "schema_hygiene",
-            "score_category": "spec",
+            "bucket": "ergonomics",
             "score_impact": 10,
             "tool_name": "debug_payload",
             "finding_category": "input-schema",
             "evidence": [
               "matched_heuristic=inputful_tool_with_empty_object_schema"
-            ]
+            ],
+            "check_title": "Weak input schema",
+            "check_rationale": "Tool input schemas should constrain free-form payloads clearly."
           },
           "locations": [
             {
@@ -671,7 +715,7 @@
           },
           "properties": {
             "risk_category": "command_execution",
-            "score_category": "tool_surface",
+            "bucket": "security",
             "score_impact": 20,
             "tool_name": "exec_command",
             "finding_category": "capability",
@@ -679,7 +723,9 @@
               "name_markers=['exec', 'command']",
               "description_markers=['execute', 'shell command', 'host machine']",
               "input_keys=['command']"
-            ]
+            ],
+            "check_title": "Dangerous execution tool",
+            "check_rationale": "Tools that execute host shell commands are high risk."
           },
           "locations": [
             {
@@ -712,7 +758,7 @@
           },
           "properties": {
             "risk_category": "file_system",
-            "score_category": "tool_surface",
+            "bucket": "security",
             "score_impact": 20,
             "tool_name": "write_file",
             "finding_category": "capability",
@@ -721,7 +767,9 @@
               "file_markers=['file', 'disk', 'path']",
               "path_keys=['path']",
               "content_keys=['content']"
-            ]
+            ],
+            "check_title": "Dangerous filesystem write tool",
+            "check_rationale": "Tools that write files on disk are high risk."
           },
           "locations": [
             {
@@ -754,14 +802,16 @@
           },
           "properties": {
             "risk_category": "external_side_effects",
-            "score_category": "tool_surface",
+            "bucket": "ergonomics",
             "score_impact": 10,
             "tool_name": "write_file",
             "finding_category": "capability",
             "evidence": [
               "path_keys=['path']",
               "scope_hint=<missing>"
-            ]
+            ],
+            "check_title": "Write tool without scope hint",
+            "check_rationale": "Filesystem mutation tools should document scope constraints clearly."
           },
           "locations": [
             {

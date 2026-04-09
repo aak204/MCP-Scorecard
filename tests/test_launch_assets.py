@@ -17,19 +17,25 @@ def test_sample_reports_exist_and_match_current_demo_shape() -> None:
     terminal_text = terminal_report.read_text(encoding="utf-8")
     hero_svg = hero_image.read_text(encoding="utf-8")
 
-    assert json_data["server"]["name"] == "Insecure Demo Server"
-    assert "scan_timestamp" in json_data
-    assert json_data["total_score"] == 10
-    assert json_data["summary"]["finding_count"] == 7
-    assert json_data["summary"]["why_score"] == (
-        "Score is driven mainly by detected command execution and file system issues."
+    assert json_data["generator"]["product_name"] == "MCP Scorecard"
+    assert json_data["scan"]["target"]["server_name"] == "Insecure Demo Server"
+    assert "timestamp" in json_data["scan"]
+    assert json_data["scorecard"]["total_score"]["value"] == 10
+    assert json_data["scorecard"]["finding_counts"]["total"] == 7
+    assert json_data["scorecard"]["why_this_score"] == (
+        "Score is driven mainly by security findings in command execution and file system "
+        "and ergonomics findings."
     )
     assert sarif_data["version"] == "2.1.0"
     assert len(sarif_data["runs"]) == 1
     assert "scan_timestamp" in sarif_data["runs"][0]["properties"]
+    assert sarif_data["runs"][0]["properties"]["report_schema_id"] == "mcp-scorecard-report"
     assert len(sarif_data["runs"][0]["results"]) == 7
     assert "```text" in terminal_text
+    assert "Generator: MCP Scorecard (mcp-scorecard 1.0.0)" in terminal_text
+    assert "Report Schema: mcp-scorecard-report@1.0" in terminal_text
     assert "Total Score: 10/100" in terminal_text
+    assert "Findings By Bucket:" in terminal_text
     assert "40/100" in hero_svg
     assert "dangerous_fs_write_tool" in hero_svg
 

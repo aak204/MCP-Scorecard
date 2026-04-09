@@ -40,11 +40,11 @@ class VagueToolDescriptionRule(Rule):
 
     rule_id: str = "vague_tool_description"
     title: str = "Vague tool description"
-    summary: str = "Tool descriptions should clearly explain what the tool does."
+    rationale: str = "Tool descriptions should clearly explain what the tool does."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.TOOL_DESCRIPTION
     risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.ERGONOMICS
     tags: tuple[str, ...] = ("tools", "description")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

@@ -1,16 +1,16 @@
-# MCP Trust Kit v0.3.0
+# MCP Scorecard v0.3.0
 
-Initial public release of `MCP Trust Kit`.
+Historical initial public release of the project now presented as `MCP Scorecard`.
 
-`MCP Trust Kit` is a deterministic scanner for MCP servers. It runs local `stdio` discovery,
-normalizes tool metadata, applies explainable rules, calculates a trust score, and emits terminal,
+`MCP Scorecard` is a deterministic scanner for MCP servers. It runs local `stdio` discovery,
+normalizes tool metadata, applies explainable rules, calculates a quality score, and emits terminal,
 JSON, and SARIF output for local use and GitHub Actions.
 
 ## Highlights
 
 - deterministic checks for protocol and tool hygiene
 - risky tool surface detection for exec-like and filesystem write tools
-- stable trust score with category breakdowns
+- stable quality score with category breakdowns
 - JSON report for CI and future integrations
 - SARIF export for GitHub code scanning
 - `mcp-trust scan` CLI with score thresholds and release-friendly exit codes
@@ -47,13 +47,13 @@ pip install -e .[dev]
 GitHub Actions:
 
 ```yaml
-- name: Run MCP Trust Kit
+- name: Run MCP Scorecard
   uses: <owner>/mcp-trust-kit@v0.3.0
   with:
     cmd: python path/to/your/server.py
     min-score: "80"
-    json-out: mcp-trust-report.json
-    sarif-out: mcp-trust-report.sarif
+    json-out: mcp-scorecard-report.json
+    sarif-out: mcp-scorecard-report.sarif
 ```
 
 ## Notes

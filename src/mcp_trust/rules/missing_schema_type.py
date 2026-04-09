@@ -22,11 +22,11 @@ class MissingSchemaTypeRule(Rule):
 
     rule_id: str = "missing_schema_type"
     title: str = "Missing schema type"
-    summary: str = "Tool input schemas should declare a top-level type."
+    rationale: str = "Tool input schemas should declare a top-level type."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.INPUT_SCHEMA
     risk_category: RiskCategory = RiskCategory.SCHEMA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.CONFORMANCE
     tags: tuple[str, ...] = ("schema", "validation")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

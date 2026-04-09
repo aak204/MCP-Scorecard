@@ -21,11 +21,11 @@ class MissingToolDescriptionRule(Rule):
 
     rule_id: str = "missing_tool_description"
     title: str = "Missing tool description"
-    summary: str = "Each tool should include a non-empty description."
+    rationale: str = "Each tool should include a non-empty description."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.TOOL_DESCRIPTION
     risk_category: RiskCategory = RiskCategory.METADATA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.METADATA
     tags: tuple[str, ...] = ("tools", "description")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

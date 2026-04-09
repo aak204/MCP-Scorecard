@@ -37,7 +37,11 @@ def test_sarif_report_contains_rules_results_and_locations() -> None:
     runs = parsed["runs"]
     assert len(runs) == 1
     driver = runs[0]["tool"]["driver"]
-    assert driver["name"] == "MCP Trust Kit"
+    assert driver["name"] == "MCP Scorecard"
+    assert runs[0]["properties"]["product_name"] == "MCP Scorecard"
+    assert runs[0]["properties"]["tool_name"] == "mcp-scorecard"
+    assert runs[0]["properties"]["report_schema_id"] == "mcp-scorecard-report"
+    assert runs[0]["properties"]["report_schema_version"] == report.schema_version
     assert runs[0]["properties"]["scan_timestamp"] == report.generated_at.isoformat()
     assert runs[0]["invocations"][0]["endTimeUtc"] == report.generated_at.isoformat()
     assert {rule["id"] for rule in driver["rules"]} == {
@@ -72,6 +76,9 @@ def test_sarif_report_contains_rules_results_and_locations() -> None:
     }
     assert {result["level"] for result in results} == {"warning", "error"}
     assert all("risk_category" in result["properties"] for result in results)
+    assert all("bucket" in result["properties"] for result in results)
+    assert all("check_title" in result["properties"] for result in results)
+    assert all("check_rationale" in result["properties"] for result in results)
     assert all("partialFingerprints" in result for result in results)
     assert all(
         result["locations"][0]["physicalLocation"]["region"]["startLine"] == 1

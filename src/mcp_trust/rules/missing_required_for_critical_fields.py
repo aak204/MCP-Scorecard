@@ -29,11 +29,11 @@ class MissingRequiredForCriticalFieldsRule(Rule):
 
     rule_id: str = "missing_required_for_critical_fields"
     title: str = "Missing required critical fields"
-    summary: str = "Critical schema fields such as path, command, or URL should be required."
+    rationale: str = "Critical schema fields such as path, command, or URL should be required."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.INPUT_SCHEMA
     risk_category: RiskCategory = RiskCategory.SCHEMA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.CONFORMANCE
     tags: tuple[str, ...] = ("schema", "validation")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

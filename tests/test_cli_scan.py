@@ -24,12 +24,16 @@ def test_scan_cli_discovers_tools_from_fake_stdio_server(
     captured = capsys.readouterr()
 
     assert exit_code == 0
+    assert "Generator: MCP Scorecard (mcp-scorecard " in captured.out
+    assert "Report Schema: mcp-scorecard-report@1.0" in captured.out
+    assert "Scan Timestamp:" in captured.out
     assert "Server: Fake MCP Server" in captured.out
     assert "Protocol: 2025-11-25" in captured.out
     assert "Target: stdio:" in captured.out
-    assert "Findings: 0" in captured.out
+    assert "Target Description: Local MCP server launched over stdio." in captured.out
+    assert "Finding Counts: total=0, error=0, warning=0, info=0" in captured.out
     assert "Score Meaning:" in captured.out
-    assert "Top Findings:" in captured.out
+    assert "Findings By Bucket:" in captured.out
     assert "- none" in captured.out
     assert "Total Score: 100/100" in captured.out
 
@@ -52,7 +56,7 @@ def test_scan_cli_returns_non_zero_when_score_is_below_threshold(
 
     assert exit_code == EXIT_CODE_SCORE_BELOW_THRESHOLD
     assert "Total Score: 10/100" in captured.out
-    assert "High-Risk Capabilities:" in captured.out
+    assert "Findings By Bucket:" in captured.out
     assert "Score gate failed" in captured.err
     assert "--min-score 80" in captured.err
 
@@ -100,4 +104,4 @@ def test_scan_cli_writes_json_report(tmp_path: Path, capsys: CaptureFixture[str]
 
     assert exit_code == 0
     assert "Total Score: 100/100" in captured.out
-    assert parsed["total_score"] == 100
+    assert parsed["scorecard"]["total_score"]["value"] == 100

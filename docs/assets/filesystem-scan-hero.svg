@@ -1,6 +1,6 @@
 <svg width="1440" height="920" viewBox="0 0 1440 920" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">MCP Trust Kit filesystem scan hero</title>
-  <desc id="desc">Terminal-style screenshot showing a real MCP Trust Kit scan on the official filesystem MCP server with total score 40 out of 100 and dangerous filesystem write findings.</desc>
+  <title id="title">MCP Scorecard filesystem scan hero</title>
+  <desc id="desc">Terminal-style screenshot showing a real MCP Scorecard run on the official filesystem MCP server with total score 40 out of 100 and dangerous filesystem write findings.</desc>
   <defs>
     <linearGradient id="bg" x1="84" y1="36" x2="1360" y2="884" gradientUnits="userSpaceOnUse">
       <stop stop-color="#0F172A"/>
@@ -30,10 +30,10 @@
     <circle cx="172" cy="106" r="8" fill="#F87171"/>
     <circle cx="198" cy="106" r="8" fill="#FBBF24"/>
     <circle cx="224" cy="106" r="8" fill="#34D399"/>
-    <text x="720" y="112" text-anchor="middle" fill="#CBD5E1" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">MCP Trust Kit real scan: official filesystem server</text>
+    <text x="720" y="112" text-anchor="middle" fill="#CBD5E1" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">MCP Scorecard real run: official filesystem server</text>
 
     <text x="164" y="186" fill="#60A5FA" font-size="24" font-family="SFMono-Regular,Consolas,Menlo,monospace">$</text>
-    <text x="190" y="186" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">mcp-trust scan --cmd npx -y \</text>
+    <text x="190" y="186" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">mcp-scorecard scan --cmd npx -y \</text>
     <text x="190" y="218" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">  @modelcontextprotocol/server-filesystem@2026.1.14 .tmp-mcp-fs</text>
 
     <text x="164" y="256" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Server: secure-filesystem-server</text>
@@ -43,11 +43,11 @@
     <text x="164" y="392" fill="#94A3B8" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Findings: 3</text>
 
     <text x="164" y="444" fill="#E2E8F0" font-size="30" font-family="SFMono-Regular,Consolas,Menlo,monospace">Total Score: <tspan fill="#F87171">40/100</tspan></text>
-    <text x="164" y="480" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Why This Score: Score is driven mainly by detected file system issues.</text>
-    <text x="164" y="514" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">High-Risk Capabilities: <tspan fill="#FDBA74">file system</tspan></text>
+    <text x="164" y="480" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Why This Score: Score is driven mainly by security findings in file system.</text>
+    <text x="164" y="514" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Category Scores: <tspan fill="#FDBA74">security 40/100</tspan>, others 100/100</text>
 
     <rect x="156" y="548" width="1128" height="1" fill="#1E293B"/>
-    <text x="164" y="592" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Top Findings:</text>
+    <text x="164" y="592" fill="#E2E8F0" font-size="22" font-family="SFMono-Regular,Consolas,Menlo,monospace">Findings By Bucket:</text>
 
     <text x="164" y="634" fill="#F87171" font-size="21" font-family="SFMono-Regular,Consolas,Menlo,monospace">- ERROR dangerous_fs_write_tool [create_directory]</text>
     <text x="216" y="664" fill="#FCA5A5" font-size="20" font-family="SFMono-Regular,Consolas,Menlo,monospace">Tool 'create_directory' appears to provide filesystem write access.</text>

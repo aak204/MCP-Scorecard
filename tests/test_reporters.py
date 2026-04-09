@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from mcp_trust import __product_name__, __report_schema_id__, __tool_name__
 from mcp_trust.models import (
     Finding,
     FindingCategory,
@@ -50,7 +51,7 @@ def test_terminal_reporter_renders_stable_summary() -> None:
             title="Dangerous execution tool",
             category=FindingCategory.CAPABILITY,
             risk_category=RiskCategory.COMMAND_EXECUTION,
-            score_category=ScoreCategory.TOOL_SURFACE,
+            bucket=ScoreCategory.SECURITY,
             message="Tool 'exec_command' appears to expose host command execution.",
             evidence=("input_keys=['command']",),
             penalty=20,
@@ -62,7 +63,7 @@ def test_terminal_reporter_renders_stable_summary() -> None:
             title="Vague tool description",
             category=FindingCategory.TOOL_DESCRIPTION,
             risk_category=RiskCategory.METADATA_HYGIENE,
-            score_category=ScoreCategory.SPEC,
+            bucket=ScoreCategory.ERGONOMICS,
             message=(
                 "Tool 'do_it' uses a vague description that does not "
                 "explain its behavior clearly."
@@ -81,38 +82,45 @@ def test_terminal_reporter_renders_stable_summary() -> None:
     rendered = TerminalReporter().render(report)
 
     assert rendered.splitlines() == [
+        f"Generator: {__product_name__} ({__tool_name__} {report.toolkit_version})",
+        f"Report Schema: {__report_schema_id__}@{report.schema_version}",
+        f"Scan Timestamp: {report.generated_at.isoformat()}",
         "Server: Demo Server",
         "Version: 1.0.0",
         "Protocol: 2025-11-25",
         'Target: stdio:["python","demo.py"]',
+        "Target Description: Local MCP server launched over stdio.",
         "Tools: 2",
-        "Findings: 2",
-        "Severity: error=1, warning=1, info=0",
+        "Finding Counts: total=2, error=1, warning=1, info=0",
         "Total Score: 70/100",
         (
-            "Score Meaning: Deterministic surface-risk score based on protocol/tool hygiene "
-            "and risky exposed capabilities."
+            "Why This Score: Score is driven mainly by security findings in command execution "
+            "and ergonomics findings."
         ),
         (
-            "Why This Score: Score is driven mainly by detected command execution issues."
+            "Score Meaning: Deterministic CI-first quality scorecard based on conformance, "
+            "security-relevant capabilities, ergonomics, and metadata hygiene."
         ),
-        "High-Risk Capabilities: command execution",
-        "Review First: exec_command, do_it",
         "Category Scores:",
-        "- spec: 90/100 (penalties: 10)",
-        "- auth: 100/100 (penalties: 0)",
-        "- secrets: 100/100 (penalties: 0)",
-        "- tool_surface: 80/100 (penalties: 20)",
-        "Top Findings:",
+        "- conformance: 100/100 (findings: 0, penalties: 0)",
+        "- security: 80/100 (findings: 1, penalties: 20)",
+        "- ergonomics: 90/100 (findings: 1, penalties: 10)",
+        "- metadata: 100/100 (findings: 0, penalties: 0)",
+        "Findings By Bucket:",
+        "- security: 1 finding, penalties: 20",
         (
-            "- ERROR dangerous_exec_tool [exec_command]: Tool 'exec_command' "
+            "  - ERROR dangerous_exec_tool [exec_command]: Tool 'exec_command' "
             "appears to expose host command execution."
         ),
+        "- ergonomics: 1 finding, penalties: 10",
         (
-            "- WARNING vague_tool_description [do_it]: Tool 'do_it' uses a vague "
+            "  - WARNING vague_tool_description [do_it]: Tool 'do_it' uses a vague "
             "description that does not explain its behavior clearly."
         ),
-        "Score Limits:",
-        "- Low score means higher exposed surface risk, not malicious intent.",
+        "Limitations:",
+        (
+            "- Low score means more deterministic findings or higher-risk exposed surface, "
+            "not malicious intent."
+        ),
         "- High score means fewer deterministic findings, not a guarantee of safety.",
     ]

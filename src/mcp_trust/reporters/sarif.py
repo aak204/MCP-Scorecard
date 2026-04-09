@@ -6,8 +6,14 @@ import hashlib
 import json
 from pathlib import Path
 
-from mcp_trust import __version__
+from mcp_trust import (
+    __product_name__,
+    __report_schema_id__,
+    __tool_name__,
+    __version__,
+)
 from mcp_trust.models import Finding, FindingLevel, Report, RuleDescriptor
+from mcp_trust.reporters.summary import build_report_summary
 
 SARIF_SCHEMA_URI = "https://json.schemastore.org/sarif-2.1.0.json"
 SARIF_VERSION = "2.1.0"
@@ -17,7 +23,7 @@ class SarifReporter:
     """Render a report into a minimal useful SARIF 2.1.0 document."""
 
     reporter_id = "sarif"
-    default_filename = "mcp-trust-report.sarif"
+    default_filename = "mcp-scorecard-report.sarif"
 
     def render(self, report: Report) -> str:
         """Render the report as formatted SARIF JSON."""
@@ -30,6 +36,7 @@ def report_to_sarif_data(report: Report) -> dict[str, object]:
     rule_descriptors = tuple(report.rule_descriptors.values())
     artifact_uri = _infer_artifact_uri(report)
     scan_timestamp = report.scan_timestamp.isoformat()
+    summary = build_report_summary(report)
 
     return {
         "$schema": SARIF_SCHEMA_URI,
@@ -38,7 +45,7 @@ def report_to_sarif_data(report: Report) -> dict[str, object]:
             {
                 "tool": {
                     "driver": {
-                        "name": "MCP Trust Kit",
+                        "name": "MCP Scorecard",
                         "semanticVersion": __version__,
                         "rules": [
                             _serialize_rule_descriptor(rule_descriptor)
@@ -54,7 +61,15 @@ def report_to_sarif_data(report: Report) -> dict[str, object]:
                     }
                 ],
                 "properties": {
+                    "product_name": __product_name__,
+                    "tool_name": __tool_name__,
+                    "report_schema_id": __report_schema_id__,
+                    "report_schema_version": report.schema_version,
                     "scan_timestamp": scan_timestamp,
+                    "total_score": report.total_score,
+                    "category_scores": _serialize_category_scores(report),
+                    "why_this_score": summary["why_score"],
+                    "limitations": list(summary["score_limits"]),
                 },
                 "results": [
                     _serialize_result(
@@ -75,13 +90,13 @@ def _serialize_rule_descriptor(rule_descriptor: RuleDescriptor) -> dict[str, obj
     level = _map_level(rule_descriptor.severity)
     return {
         "id": rule_descriptor.rule_id,
-        "name": rule_descriptor.name,
-        "shortDescription": {"text": rule_descriptor.name},
-        "fullDescription": {"text": rule_descriptor.summary},
+        "name": rule_descriptor.title,
+        "shortDescription": {"text": rule_descriptor.title},
+        "fullDescription": {"text": rule_descriptor.rationale},
         "defaultConfiguration": {"level": level},
         "help": {
             "text": (
-                f"{rule_descriptor.summary} "
+                f"{rule_descriptor.rationale} "
                 f"Severity: {rule_descriptor.severity.value}. "
                 f"Score impact: {rule_descriptor.score_impact}."
             )
@@ -91,7 +106,7 @@ def _serialize_rule_descriptor(rule_descriptor: RuleDescriptor) -> dict[str, obj
             "precision": "medium",
             "problem.severity": _map_problem_severity(rule_descriptor.severity),
             "risk_category": rule_descriptor.risk_category.value,
-            "score_category": rule_descriptor.score_category.value,
+            "bucket": rule_descriptor.bucket.value,
             "score_impact": rule_descriptor.score_impact,
         },
     }
@@ -114,7 +129,7 @@ def _serialize_result(
         },
         "properties": {
             "risk_category": finding.risk_category.value,
-            "score_category": finding.score_category.value,
+            "bucket": finding.bucket.value,
             "score_impact": finding.score_impact,
             "tool_name": finding.tool_name,
             "finding_category": None if finding.category is None else finding.category.value,
@@ -136,6 +151,10 @@ def _serialize_result(
     rule_descriptor = rule_descriptors.get(finding.rule_id)
     if rule_descriptor is not None:
         result["rule"] = {"id": rule_descriptor.rule_id}
+        properties = result["properties"]
+        if isinstance(properties, dict):
+            properties["check_title"] = rule_descriptor.title
+            properties["check_rationale"] = rule_descriptor.rationale
 
     return result
 
@@ -163,7 +182,7 @@ def _build_rule_tags(rule_descriptor: RuleDescriptor) -> tuple[str, ...]:
     tags = list(rule_descriptor.tags)
     tags.append(rule_descriptor.category.value)
     tags.append(rule_descriptor.risk_category.value)
-    tags.append(rule_descriptor.score_category.value)
+    tags.append(rule_descriptor.bucket.value)
     return tuple(dict.fromkeys(tags))
 
 
@@ -207,6 +226,19 @@ def _infer_artifact_uri(report: Report) -> str | None:
     if command:
         return _normalize_path_candidate(command[0])
     return None
+
+
+def _serialize_category_scores(report: Report) -> dict[str, object]:
+    """Return compact category score metadata for SARIF run properties."""
+    return {
+        category.value: {
+            "score": breakdown.score,
+            "max_score": breakdown.max_score,
+            "penalty_points": breakdown.penalty_points,
+            "finding_count": breakdown.finding_count,
+        }
+        for category, breakdown in report.score.category_breakdown.items()
+    }
 
 
 def _normalize_path_candidate(candidate: object) -> str | None:

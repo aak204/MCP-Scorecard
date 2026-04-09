@@ -1,4 +1,4 @@
-name: Example MCP Trust Scan
+name: Example MCP Scorecard
 
 on:
   pull_request:
@@ -14,16 +14,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run MCP Trust Kit
+      - name: Run MCP Scorecard
+        id: scorecard
         uses: ./
         with:
           cmd: python examples/insecure-server/server.py
           min-score: "80"
-          json-out: mcp-trust-report.json
-          sarif-out: mcp-trust-report.sarif
+          json-out: mcp-scorecard-report.json
+          sarif-out: mcp-scorecard-report.sarif
+          markdown-out: mcp-scorecard-summary.md
+
+      - name: Show Scorecard Outputs
+        if: always()
+        shell: bash
+        run: |
+          echo "total score: ${{ steps.scorecard.outputs.total-score }}"
+          echo "passed: ${{ steps.scorecard.outputs.passed }}"
+          echo 'category scores: ${{ steps.scorecard.outputs.category-scores }}'
 
       - name: Upload SARIF
         if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: mcp-trust-report.sarif
+          sarif_file: mcp-scorecard-report.sarif

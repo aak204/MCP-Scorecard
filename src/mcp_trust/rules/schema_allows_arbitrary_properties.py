@@ -22,11 +22,11 @@ class SchemaAllowsArbitraryPropertiesRule(Rule):
 
     rule_id: str = "schema_allows_arbitrary_properties"
     title: str = "Schema allows arbitrary properties"
-    summary: str = "Tool input schemas should not allow arbitrary top-level properties."
+    rationale: str = "Tool input schemas should not allow arbitrary top-level properties."
     severity: FindingLevel = FindingLevel.WARNING
     category: FindingCategory = FindingCategory.INPUT_SCHEMA
     risk_category: RiskCategory = RiskCategory.SCHEMA_HYGIENE
-    score_category: ScoreCategory = ScoreCategory.SPEC
+    bucket: ScoreCategory = ScoreCategory.CONFORMANCE
     tags: tuple[str, ...] = ("schema", "validation")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

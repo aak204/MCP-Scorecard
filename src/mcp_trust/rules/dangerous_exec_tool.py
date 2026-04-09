@@ -32,11 +32,11 @@ class DangerousExecToolRule(Rule):
 
     rule_id: str = "dangerous_exec_tool"
     title: str = "Dangerous execution tool"
-    summary: str = "Tools that execute host shell commands are high risk."
+    rationale: str = "Tools that execute host shell commands are high risk."
     severity: FindingLevel = FindingLevel.ERROR
     category: FindingCategory = FindingCategory.CAPABILITY
     risk_category: RiskCategory = RiskCategory.COMMAND_EXECUTION
-    score_category: ScoreCategory = ScoreCategory.TOOL_SURFACE
+    bucket: ScoreCategory = ScoreCategory.SECURITY
     tags: tuple[str, ...] = ("capability", "execution")
 
     def evaluate(self, server: NormalizedServer) -> tuple[Finding, ...]:

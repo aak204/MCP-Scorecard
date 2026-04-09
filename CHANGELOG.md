@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project uses Semantic Versioning.
 
+## [Unreleased]
+
+No unreleased changes yet.
+
+## [1.0.0] - 2026-04-09
+
+First stable public release as `MCP Scorecard`.
+
+### Added
+
+- stable V1 JSON scorecard report contract with explicit `schema`, `generator`, `scan`, `inventory`, `scorecard`, `checks`, `findings`, and `grouped_findings` sections
+- explicit score buckets for `conformance`, `security`, `ergonomics`, and `metadata`
+- full check metadata with `id`, `title`, `bucket`, `severity`, and `rationale`
+- GitHub Action outputs for `total-score`, `category-scores`, and `passed`
+- PR-friendly Markdown scorecard summary in the GitHub Action step summary, with optional file output
+- new `mcp-scorecard` console script while retaining `mcp-trust` as a legacy alias
+
+### Changed
+
+- preferred project naming, product naming, and report branding now consistently use `MCP Scorecard`
+- package metadata, CLI help, sample reports, and release docs updated for `v1.0.0`
+- preferred report artifact names now use `mcp-scorecard-*`
+- terminal and SARIF outputs aligned with the V1 scorecard contract and branding
+- release surface hardened around deterministic CI-first quality scoring rather than trust-only framing
+
+### Notes
+
+- high score does not mean safe
+- low score does not mean malicious
+- scores measure deterministic, reviewable properties only
+- `mcp-trust` remains available as a compatibility alias for this release line
+
 ## [0.5.0] - 2026-03-31
 
 Integration-driven release.

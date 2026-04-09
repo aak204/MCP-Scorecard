@@ -3,9 +3,9 @@
 This note records a few reproducible validation runs on public MCP servers.
 
 It is not a leaderboard and it is not a claim that a low score means a server is "bad".
-The point is narrower: show that `MCP Trust Kit` works on real servers outside the demo fixture.
+The point is narrower: show that `MCP Scorecard` works on real servers outside the demo fixture.
 
-**MCP Trust Kit scores surface risk, not business intent.**
+**MCP Scorecard is a deterministic quality scorecard, not a safety verdict.**
 
 Validation date: `2026-03-31`
 
@@ -18,7 +18,7 @@ Reference sources for the public packages used here:
 
 These validation runs were executed on Windows.
 
-- `mcp-trust` launches subprocesses without a shell
+- `mcp-scorecard` launches subprocesses without a shell
 - on this machine `npx` resolves through `npx.cmd`
 - on macOS or Linux, the equivalent command is usually just `npx`
 
@@ -31,13 +31,13 @@ Server:
 Command:
 
 ```bash
-mcp-trust scan --cmd python examples/insecure-server/server.py
+mcp-scorecard scan --cmd python examples/insecure-server/server.py
 ```
 
 Windows:
 
 ```powershell
-.\.venv\Scripts\mcp-trust scan --cmd .\.venv\Scripts\python examples\insecure-server\server.py
+.\.venv\Scripts\mcp-scorecard scan --cmd .\.venv\Scripts\python examples\insecure-server\server.py
 ```
 
 Observed result:
@@ -65,13 +65,13 @@ Package:
 Command:
 
 ```bash
-mcp-trust scan --cmd npx -y @modelcontextprotocol/server-memory@2026.1.26
+mcp-scorecard scan --cmd npx -y @modelcontextprotocol/server-memory@2026.1.26
 ```
 
 Windows:
 
 ```powershell
-.\.venv\Scripts\mcp-trust scan --cmd C:\nvm4w\nodejs\npx.cmd -y @modelcontextprotocol/server-memory@2026.1.26
+.\.venv\Scripts\mcp-scorecard scan --cmd C:\nvm4w\nodejs\npx.cmd -y @modelcontextprotocol/server-memory@2026.1.26
 ```
 
 Observed result:
@@ -100,7 +100,7 @@ Command:
 
 ```bash
 mkdir -p .tmp-mcp-fs
-mcp-trust scan --cmd npx -y @modelcontextprotocol/server-filesystem@2026.1.14 .tmp-mcp-fs
+mcp-scorecard scan --cmd npx -y @modelcontextprotocol/server-filesystem@2026.1.14 .tmp-mcp-fs
 ```
 
 Windows:
@@ -108,7 +108,7 @@ Windows:
 ```powershell
 $tmp = Join-Path $PWD ".tmp-mcp-fs"
 New-Item -ItemType Directory -Force $tmp | Out-Null
-.\.venv\Scripts\mcp-trust scan --cmd C:\nvm4w\nodejs\npx.cmd -y @modelcontextprotocol/server-filesystem@2026.1.14 $tmp
+.\.venv\Scripts\mcp-scorecard scan --cmd C:\nvm4w\nodejs\npx.cmd -y @modelcontextprotocol/server-filesystem@2026.1.14 $tmp
 ```
 
 Observed result:
@@ -130,10 +130,11 @@ Why this is a useful risky case:
 Caveat:
 
 - this server can still be entirely appropriate in a constrained environment
-- `MCP Trust Kit` scores surface risk, not business intent
+- `MCP Scorecard` reports deterministic findings, not business intent
 
 ## How To Read These Results
 
 - a high score is not a guarantee of safety
 - a low score is not a public accusation
+- a low score does not mean malicious intent
 - the findings are best used as a review signal before adoption
